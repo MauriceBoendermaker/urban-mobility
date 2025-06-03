@@ -1,6 +1,7 @@
 import sqlite3
-from utils.encryption import encrypt, decrypt, hash_password
+
 from datetime import datetime
+from utils.encryption import encrypt, decrypt, hash_password
 
 DB_PATH = "urban_mobility.db"
 
