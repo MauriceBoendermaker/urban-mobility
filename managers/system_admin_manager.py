@@ -2,6 +2,7 @@ import sqlite3
 
 from datetime import datetime
 from utils.encryption import encrypt, decrypt, hash_password
+from utils.validation import validate_username, validate_password, validate_name
 
 DB_PATH = "urban_mobility.db"
 
@@ -34,12 +35,46 @@ def create_system_admin():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    username = input("Enter username (8-10 chars): ").strip()
+    while True:
+        username = input("Enter username (8–10 chars): ").strip()
+        valid, errors = validate_username(username)
+        if not valid:
+            print("Username is invalid:")
+            for error in errors:
+                print(" -", error)
+        else:
+            break
 
-    password = input("Enter password: ").strip()
+    while True:
+        password = input("Enter password: ").strip()
+        valid, errors = validate_password(password)
+        if not valid:
+            print("Password does not meet requirements:")
+            for error in errors:
+                print(" -", error)
+        else:
+            break
 
-    first_name = input("First name: ").strip()
-    last_name = input("Last name: ").strip()
+    while True:
+        first_name = input("First name: ").strip()
+        valid, errors = validate_name(first_name)
+        if not valid:
+            print("Invalid first name:")
+            for error in errors:
+                print(" -", error)
+        else:
+            break
+
+    while True:
+        last_name = input("Last name: ").strip()
+        valid, errors = validate_name(last_name)
+        if not valid:
+            print("Invalid last name:")
+            for error in errors:
+                print(" -", error)
+        else:
+            break
+
     reg_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     try:
