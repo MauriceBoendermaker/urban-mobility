@@ -1,6 +1,35 @@
 from cryptography.fernet import Fernet
 import hashlib
 import os
+from Crypto.Cipher import AES
+from dotenv import load_dotenv
+import base64
+
+
+dotenv_path = os.path.join(os.path.dirname(__file__), "key.env")
+load_dotenv(dotenv_path)
+
+# Load and decode the encryption key
+key_b64 = os.getenv("ENCRYPTION_KEY")
+if key_b64 is None:
+    raise ValueError("Missing DETERMINISTIC_ENCRYPTION_KEY in environment")
+
+DETERMINISTIC_ENCRYPTION_KEY = base64.b64decode(key_b64)
+
+
+def deterministic_encrypt(plaintext: str) -> str:
+
+    cipher = AES.new(DETERMINISTIC_ENCRYPTION_KEY, AES.MODE_SIV)
+    ciphertext, tag = cipher.encrypt_and_digest(plaintext.encode())
+    return (ciphertext + tag).hex()
+
+
+def deterministic_decrypt(ciphertext_hex: str) -> str:
+    data = bytes.fromhex(ciphertext_hex)
+    ciphertext, tag = data[:-16], data[-16:]
+    cipher = AES.new(DETERMINISTIC_ENCRYPTION_KEY, AES.MODE_SIV)
+    return cipher.decrypt_and_verify(ciphertext, tag).decode()
+
 
 KEY_FILE = "logs/logkey.key"
 
@@ -15,7 +44,8 @@ def generate_key():
 
 def load_key():
     if not os.path.exists(KEY_FILE):
-        raise Exception("Encryption key niet gevonden: run eerst generate_key().")
+        raise Exception(
+            "Encryption key niet gevonden: run eerst generate_key().")
     with open(KEY_FILE, "rb") as f:
         return f.read()
 
