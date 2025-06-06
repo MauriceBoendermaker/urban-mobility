@@ -1,5 +1,5 @@
 import sqlite3
-from utils.encryption import encrypt, decrypt, hash_password
+from utils.encryption import encrypt, decrypt, hash_password, deterministic_encrypt, deterministic_decrypt
 from utils.validation import validate_username, validate_password, validate_name
 from datetime import datetime
 
@@ -81,7 +81,7 @@ def create_service_engineer():
             INSERT INTO users (username_encrypted, password_hash, role, first_name_enc, last_name_enc, registration_date)
             VALUES (?, ?, ?, ?, ?, ?)
         """, (
-            encrypt(username),
+            deterministic_encrypt(username),
             hash_password(password),
             "service_engineer",
             encrypt(first_name),
@@ -107,7 +107,7 @@ def list_service_engineers():
     print("\n--- Service Engineers ---")
     for row in rows:
         user_id, username_enc, fname_enc, lname_enc = row
-        print(f"[{user_id}] {decrypt(username_enc)} | {decrypt(fname_enc)} {decrypt(lname_enc)}")
+        print(f"[{user_id}] {deterministic_decrypt(username_enc)} | {decrypt(fname_enc)} {decrypt(lname_enc)}")
 
     conn.close()
 
