@@ -1,4 +1,5 @@
 from auth.login import Login
+from auth.auth_manager import update_own_password
 
 from managers.system_admin_manager import system_admin_crud
 from managers.service_engineer_manager import service_engineer_crud
@@ -29,7 +30,9 @@ def main():
         elif user[3] == "system_admin":
             print("\n--- System Admin Menu ---")
             print("1. Manage Service Engineers")
-            print("2. Logout")
+            print("2. Manage Scooters")
+            print("3. Change Own Password")
+            print("4. Logout")
             choice = input("Choose option: ").strip()
             if choice == "1":
                 service_engineer_crud()
