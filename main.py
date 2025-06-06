@@ -1,21 +1,19 @@
 # from auth.login import login
+
 from managers.system_admin_manager import system_admin_crud
-from auth.login import Login
+from managers.service_engineer_manager import service_engineer_crud
 
 
 def main():
-    user = None
-    while not user:
-        user = Login()
+    # user = {"username": "super_admin", "role": "super_admin"}
+    user = {"username": "demo_admin", "role": "system_admin"}
 
     while True:
-
-        if user[3] == "super_admin":
+        if user["role"] == "super_admin":
             print("\n--- Super Admin Menu ---")
             print("1. Manage System Administrators")
             print("2. View Logs (komt binnenkort)")
             print("3. Logout")
-
             choice = input("Choose an option: ").strip()
             if choice == "1":
                 system_admin_crud()
@@ -26,15 +24,19 @@ def main():
                 break
             else:
                 print("Invalid choice.")
-        elif user[3] == "system_admin":
-            print("\n--- System Admin Menu ---")
-            print("1. Manage Scooters")
-            print("2. Manage account")
-            print("3. Manage users")
-            print("4. Manage Backups")
-            print("5. Manage travellers")
 
-            choice = input("Choose an option: ").strip()
+        elif user["role"] == "system_admin":
+            print("\n--- System Admin Menu ---")
+            print("1. Manage Service Engineers")
+            print("2. Logout")
+            choice = input("Choose option: ").strip()
+            if choice == "1":
+                service_engineer_crud()
+            elif choice == "2":
+                print("Logged out.")
+                break
+            else:
+                print("Invalid choice.")
 
 
 if __name__ == "__main__":
