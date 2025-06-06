@@ -1,6 +1,7 @@
-from cryptography.fernet import Fernet
-import hashlib
 import os
+import hashlib
+
+from cryptography.fernet import Fernet
 
 KEY_FILE = "logs/logkey.key"
 

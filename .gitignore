@@ -650,3 +650,5 @@ yarn-error.log
 
 # Images folder
 images/
+
+*.db
