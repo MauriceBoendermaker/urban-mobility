@@ -1,8 +1,6 @@
 import sqlite3
-
+from utils.encryption import encrypt, decrypt, hash_password, deterministic_encrypt, deterministic_decrypt
 from datetime import datetime
-from utils.encryption import encrypt, decrypt, hash_password
-from utils.validation import validate_username, validate_password, validate_name
 
 DB_PATH = "urban_mobility.db"
 
@@ -35,46 +33,12 @@ def create_system_admin():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    while True:
-        username = input("Enter username (8–10 chars): ").strip()
-        valid, errors = validate_username(username)
-        if not valid:
-            print("Username is invalid:")
-            for error in errors:
-                print(" -", error)
-        else:
-            break
+    username = input("Enter username (8-10 chars): ").strip()
 
-    while True:
-        password = input("Enter password: ").strip()
-        valid, errors = validate_password(password)
-        if not valid:
-            print("Password does not meet requirements:")
-            for error in errors:
-                print(" -", error)
-        else:
-            break
+    password = input("Enter password: ").strip()
 
-    while True:
-        first_name = input("First name: ").strip()
-        valid, errors = validate_name(first_name)
-        if not valid:
-            print("Invalid first name:")
-            for error in errors:
-                print(" -", error)
-        else:
-            break
-
-    while True:
-        last_name = input("Last name: ").strip()
-        valid, errors = validate_name(last_name)
-        if not valid:
-            print("Invalid last name:")
-            for error in errors:
-                print(" -", error)
-        else:
-            break
-
+    first_name = input("First name: ").strip()
+    last_name = input("Last name: ").strip()
     reg_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     try:
@@ -82,7 +46,7 @@ def create_system_admin():
             INSERT INTO users (username_encrypted, password_hash, role, first_name_enc, last_name_enc, registration_date)
             VALUES (?, ?, ?, ?, ?, ?)
         """, (
-            encrypt(username),
+            deterministic_encrypt(username),
             hash_password(password),
             "system_admin",
             encrypt(first_name),
@@ -109,7 +73,8 @@ def list_system_admins():
     print("\n--- System Admins ---")
     for row in rows:
         user_id, username_enc, fname_enc, lname_enc = row
-        print(f"[{user_id}] {decrypt(username_enc)} | {decrypt(fname_enc)} {decrypt(lname_enc)}")
+        print(
+            f"[{user_id}] {deterministic_decrypt(username_enc)} | {decrypt(fname_enc)} {decrypt(lname_enc)}")
 
     conn.close()
 
@@ -140,7 +105,8 @@ def delete_system_admin():
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM users WHERE user_id=? AND role='system_admin'", (user_id,))
+    cursor.execute(
+        "DELETE FROM users WHERE user_id=? AND role='system_admin'", (user_id,))
     conn.commit()
     conn.close()
     print("System Admin deleted.")
