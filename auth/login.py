@@ -12,16 +12,15 @@ last_name_encrypted = encrypt("Admin")
 password_hash = hash_password("Admin_123?")
 registration_date = str(date.today())
 
-# Build the tuple
 super_admin_user = (
-    0,  # user_id
+    0,
     username_encrypted,
     password_hash,
-    "super_admin",  # role
+    "super_admin",
     first_name_encrypted,
     last_name_encrypted,
     registration_date,
-    1  # is_active
+    1
 )
 
 super_admin_username = "super_admin"

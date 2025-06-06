@@ -1,7 +1,6 @@
 # from auth.login import login
 from managers.system_admin_manager import system_admin_crud
 from auth.login import Login
-from Scooters import scooters_menu
 
 
 def main():
@@ -36,27 +35,6 @@ def main():
             print("5. Manage travellers")
 
             choice = input("Choose an option: ").strip()
-
-            if choice == "1":
-                # Scooters GET
-                scooters_menu(user)
-            elif choice == "2":
-                # Account deletion, Password reset
-                Accounts
-
-            elif choice == "3":
-                # Service Engineers CRUD &
-                pass
-            elif choice == "4":
-                # backup
-                pass
-
-            elif choice == "5":
-                # Travellers CRUD
-                pass
-
-            else:
-                print("Invalid choice.")
 
 
 if __name__ == "__main__":
