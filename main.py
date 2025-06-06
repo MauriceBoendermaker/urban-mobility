@@ -1,15 +1,16 @@
-# from auth.login import login
+from auth.login import Login
 
 from managers.system_admin_manager import system_admin_crud
 from managers.service_engineer_manager import service_engineer_crud
 
 
 def main():
-    # user = {"username": "super_admin", "role": "super_admin"}
-    user = {"username": "demo_admin", "role": "system_admin"}
+    user = None
+    while not user:
+        user = Login()
 
     while True:
-        if user["role"] == "super_admin":
+        if user[3] == "super_admin":
             print("\n--- Super Admin Menu ---")
             print("1. Manage System Administrators")
             print("2. View Logs (komt binnenkort)")
@@ -25,7 +26,7 @@ def main():
             else:
                 print("Invalid choice.")
 
-        elif user["role"] == "system_admin":
+        elif user[3] == "system_admin":
             print("\n--- System Admin Menu ---")
             print("1. Manage Service Engineers")
             print("2. Logout")

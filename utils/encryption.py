@@ -5,7 +5,6 @@ from Crypto.Cipher import AES
 from dotenv import load_dotenv
 import base64
 
-
 dotenv_path = os.path.join(os.path.dirname(__file__), "key.env")
 load_dotenv(dotenv_path)
 
@@ -18,7 +17,6 @@ DETERMINISTIC_ENCRYPTION_KEY = base64.b64decode(key_b64)
 
 
 def deterministic_encrypt(plaintext: str) -> str:
-
     cipher = AES.new(DETERMINISTIC_ENCRYPTION_KEY, AES.MODE_SIV)
     ciphertext, tag = cipher.encrypt_and_digest(plaintext.encode())
     return (ciphertext + tag).hex()
