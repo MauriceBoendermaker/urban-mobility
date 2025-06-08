@@ -34,7 +34,6 @@ def create_system_admin():
     cursor = conn.cursor()
 
     username = input("Enter username (8-10 chars): ").strip()
-
     password = input("Enter password: ").strip()
 
     first_name = input("First name: ").strip()

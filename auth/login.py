@@ -1,6 +1,7 @@
-from utils.encryption import hash_password, deterministic_encrypt
+from utils.encryption import hash_password, deterministic_encrypt, deterministic_decrypt
 import sqlite3
 import os
+from utils.Sessions import create_session, is_session_valid
 
 from utils.encryption import encrypt, hash_password
 from datetime import date
@@ -37,7 +38,8 @@ def Login():
 
     if username == super_admin_username and password == super_admin_password:
         print("You're logged in as super admin!")
-        return super_admin_user
+        session_token = create_session(0)
+        return (super_admin_user, session_token)
     else:
         # User met username zoeken
         encrypted_username = deterministic_encrypt(username)
@@ -47,11 +49,13 @@ def Login():
             return user
         hashed_password = hash_password(password)
         # (user_id, username_encrypt, password_hash, role, first_name_enc, last_name_enc, registration_date, is_active)
-        password_hash, is_active, first_name_enc, user_role = user[2], user[7], user[4], user[3]
+        user_id, password_hash, is_active, first_name_enc, user_role = user[
+            0], user[2], user[7], user[4], user[3]
         if hashed_password == password_hash and is_active == 1:
             print(
-                f"Welcome {deterministic_encrypt(first_name_enc)} You're logged in as a {user_role}")
-            return user
+                f"Welcome, You're logged in as a {user_role}")
+            session_token = create_session(user_id)
+            return (user, session_token)
         else:
             print("The username or password is not correct or the account is not active")
             return None
