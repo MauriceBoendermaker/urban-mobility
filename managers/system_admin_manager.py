@@ -12,7 +12,8 @@ def system_admin_crud():
         print("2. View System Admins")
         print("3. Update System Admin")
         print("4. Delete System Admin")
-        print("5. Back to Main Menu")
+        print("5. Delete System Admin")
+        print("6. Back to Main Menu")
 
         choice = input("Choose an option: ").strip()
         if choice == "1":
@@ -24,6 +25,8 @@ def system_admin_crud():
         elif choice == "4":
             delete_system_admin()
         elif choice == "5":
+            travellers_crud()
+        elif choice == "6":
             break
         else:
             print("Invalid option.")
