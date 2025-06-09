@@ -1,6 +1,7 @@
 import sqlite3
 from utils.encryption import encrypt, decrypt, hash_password, deterministic_encrypt, deterministic_decrypt
 from datetime import datetime
+from travellers.travellers import travellers_crud_menu
 
 DB_PATH = "urban_mobility.db"
 
@@ -12,7 +13,7 @@ def system_admin_crud():
         print("2. View System Admins")
         print("3. Update System Admin")
         print("4. Delete System Admin")
-        print("5. Delete System Admin")
+        print("5. Manage travellers")
         print("6. Back to Main Menu")
 
         choice = input("Choose an option: ").strip()
@@ -25,7 +26,7 @@ def system_admin_crud():
         elif choice == "4":
             delete_system_admin()
         elif choice == "5":
-            travellers_crud()
+            travellers_crud_menu()
         elif choice == "6":
             break
         else:

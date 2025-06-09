@@ -1,4 +1,68 @@
 import re
+from travellers.Cities import CITIES
+from datetime import datetime
+
+
+def validate_city_number(user_input: str) -> tuple[bool, list[str]]:
+    try:
+        city_number = int(user_input)
+        if city_number not in range(1, len(CITIES) + 1):
+            return (False, [f"Enter the number of the city (1-{len(CITIES)}): "])
+        return (True, [""])
+
+    except:
+        return (False, [""])
+
+
+def validate_street_name(street_name: str) -> tuple[bool, list[str]]:
+    errors = []
+    if not re.match(r"^[A-Za-z][A-Za-z\s\-]*$", street_name):
+        errors.append(
+            "Street name must start with letters and may only contain a dash (-)")
+    return len(errors) == 0, errors
+
+
+def validate_house_number(house_number: str) -> tuple[bool, list[str]]:
+    errors = []
+
+    if not re.fullmatch(r"\d{1,3}[A-Za-z]?", house_number):
+        errors.append("house number can only contain 1-3 digits")
+
+    return len(errors) == 0, errors
+
+
+def validate_gender(gender: str) -> tuple[bool, list[str]]:
+    errors = []
+
+    if not re.fullmatch(r"[MFmf]?", gender):
+        errors.append("Choose 'M' or 'm' for male, and 'F' or 'f' for female")
+    return len(errors) == 0, errors
+
+
+def validate_email_address(email_address: str) -> tuple[bool, list[str]]:
+    """
+    Validates an email address.
+    Requirements:
+    - Must follow basic email format: local@domain.tld
+    - Local part can contain letters, numbers, dots, underscores, dashes, and plus signs
+    - local part cannot start with special characters
+    - Domain and TLD must be alphanumeric (dots and dashes allowed in domain)
+    """
+
+    errors = []
+
+    pattern = (
+        r"^(?![_.+-])"
+        r"[a-zA-Z0-9]+([._+-]?[a-zA-Z0-9]+)*"
+        r"@"
+        r"[a-zA-Z0-9-]+"
+        r"(\.[a-zA-Z0-9-]+)*"
+        r"\.[a-zA-Z]{2,}$")
+
+    if not re.fullmatch(pattern, email_address):
+        errors.append("Invalid email format. Must be like 'name@example.com'.")
+
+    return len(errors) == 0, errors
 
 
 def validate_username(username: str) -> tuple[bool, list[str]]:
@@ -16,7 +80,8 @@ def validate_username(username: str) -> tuple[bool, list[str]]:
     if not re.match(r"^[A-Za-z_]", username):
         errors.append("Username must start with a letter or underscore.")
     if not re.match(r"^[A-Za-z_][A-Za-z0-9_'.]{7,9}$", username):
-        errors.append("Username can only contain letters, digits, underscore (_), apostrophe ('), and period (.)")
+        errors.append(
+            "Username can only contain letters, digits, underscore (_), apostrophe ('), and period (.)")
 
     return len(errors) == 0, errors
 
@@ -50,7 +115,8 @@ def validate_name(name: str) -> tuple[bool, list[str]]:
     if not name:
         errors.append("Name cannot be empty.")
     elif not re.match(r"^[A-Za-z]+(?:[-\s][A-Za-z]+)*$", name):
-        errors.append("Name can only contain letters, spaces, and hyphens (no numbers or special characters).")
+        errors.append(
+            "Name can only contain letters, spaces, and hyphens (no numbers or special characters).")
 
     return (len(errors) == 0, errors)
 
@@ -87,4 +153,26 @@ def validate_soc_percentage(value: int) -> bool:
 
 def validate_iso_date(date_str: str) -> bool:
     # Dateformat YYYY-MM-DD
-    return re.match(r"^\d{4}-\d{2}-\d{2}$", date_str) is not None
+    try:
+        datetime.strptime(date_str, "%Y-%m-%d")
+        return True
+    except ValueError:
+        return False
+
+
+def get_valid_input(prompt, validator, error_label):
+    while True:
+        value = input(prompt).strip()
+        result = validator(value)
+
+        if isinstance(result, bool):
+            valid, errors = result, []
+        else:
+            valid, errors = result
+
+        if valid:
+            return value
+
+        print(f"{error_label}:")
+        for error in errors:
+            print(" -", error)

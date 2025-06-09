@@ -2,6 +2,7 @@ import sqlite3
 from utils.encryption import encrypt, decrypt, hash_password
 from utils.validation import validate_username, validate_password, validate_name
 from datetime import datetime
+from travellers.travellers import travellers_crud_menu
 
 DB_PATH = "urban_mobility.db"
 
@@ -13,7 +14,9 @@ def service_engineer_crud():
         print("2. View Service Engineers")
         print("3. Update Service Engineer")
         print("4. Delete Service Engineer")
-        print("5. Back to Main Menu")
+        print("5. Manage travellers")
+
+        print("6. Back to Main Menu")
 
         choice = input("Choose an option: ").strip()
         if choice == "1":
@@ -25,6 +28,8 @@ def service_engineer_crud():
         elif choice == "4":
             delete_service_engineer()
         elif choice == "5":
+            travellers_crud_menu()
+        elif choice == "6":
             break
         else:
             print("Invalid option.")
@@ -35,7 +40,7 @@ def create_service_engineer():
     cursor = conn.cursor()
 
     while True:
-        username = input("Enter username (8–10 chars): ").strip()
+        username = input("Enter username (8-10 chars): ").strip()
         valid, errors = validate_username(username)
         if not valid:
             print("Username is invalid:")
@@ -107,7 +112,8 @@ def list_service_engineers():
     print("\n--- Service Engineers ---")
     for row in rows:
         user_id, username_enc, fname_enc, lname_enc = row
-        print(f"[{user_id}] {decrypt(username_enc)} | {decrypt(fname_enc)} {decrypt(lname_enc)}")
+        print(
+            f"[{user_id}] {decrypt(username_enc)} | {decrypt(fname_enc)} {decrypt(lname_enc)}")
 
     conn.close()
 
@@ -138,7 +144,8 @@ def delete_service_engineer():
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM users WHERE user_id=? AND role='service_engineer'", (user_id,))
+    cursor.execute(
+        "DELETE FROM users WHERE user_id=? AND role='service_engineer'", (user_id,))
     conn.commit()
     conn.close()
     print("Service Engineer deleted.")
