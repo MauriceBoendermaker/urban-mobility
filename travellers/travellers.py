@@ -43,7 +43,8 @@ def travellers_crud_menu():
 
 
 def show_all_travellers():
-    travellers = cursor.execute("SELECT * FROM travellers").fetchall()
+    travellers = cursor.execute(
+        "SELECT first_name_enc, last_name_enc, birthday, gender, street_name_enc, house_number_enc, zip_code_enc, city, email_enc, mobile_phone_enc, driving_license_enc, registration_date FROM travellers").fetchall()
 
     return travellers if len(travellers) > 0 else None
 
@@ -77,9 +78,11 @@ def register_traveller_menu():
     email_address = get_valid_input(
         "Email address: ", validate_email_address, "Invalid email address")
     mobile_phone = get_valid_input(
-        "Mobile phone: ", validate_phone_number, "Invalid phone number")
+        "Mobile phone: +31 6", validate_phone_number, "Invalid phone number")
     driving_license_number = get_valid_input(
         "Driving license number: ", validate_driving_license, "Invalid input")
+
+    mobile_phone = "+31 6" + mobile_phone
 
     register_traveller(
         first_name,
@@ -124,8 +127,6 @@ def register_traveller(first_name, last_name, birthday, gender, street_name, hou
         print("Traveller already exists")
     except:
         print("An unexpected error occurred. Please contact support.")
-    finally:
-        conn.close()
 
 
 def update_traveller():
@@ -137,4 +138,16 @@ def delete_traveller():
 
 
 def list_travellers(travellers):
-    pass
+    print("--- Travellers ---")
+
+    for t in travellers:
+
+        first_name, last_name, birthday, gender, street_name, house_number, zip_code, city, email_address, mobile_phone, driving_license_number, registration_date = t
+        print(
+
+            f"""Full name: {deterministic_decrypt(first_name)} {deterministic_decrypt(last_name)}, """
+            f"""Birthday: {deterministic_decrypt(birthday)}, Gender: {"Male" if deterministic_decrypt(gender).upper() else "Female"}, """
+            f"""Address: {deterministic_decrypt(street_name)} {deterministic_decrypt(house_number)}, {deterministic_decrypt(zip_code)} {deterministic_decrypt(city)}, """
+            f"""Email: {deterministic_decrypt(email_address)}, Phone: {deterministic_decrypt(mobile_phone)}, """
+            f"""Driving License: {deterministic_decrypt(driving_license_number)}, Registered since: {deterministic_decrypt(registration_date)}\n"""
+        )
