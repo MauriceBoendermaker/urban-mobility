@@ -14,13 +14,15 @@ def main():
 
         if user[3] == "super_admin":
             super_admin_menu.super_admin_menu()
+            break
 
         elif user[3] == "system_admin":
             system_admin_menu.system_admin_menu()
-
+            break
         elif user[3] == "service_engineer":
 
             service_engineer_menu.service_engineer_menu(user[3])
+            break
     else:
         print("Your session is expired")
 
