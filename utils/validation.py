@@ -160,9 +160,12 @@ def validate_iso_date(date_str: str) -> bool:
         return False
 
 
-def get_valid_input(prompt, validator, error_label):
+def get_valid_input(prompt, validator, error_label, toupper=False):
     while True:
-        value = input(prompt).strip()
+        if toupper:
+            value = input(prompt).strip().upper()
+        else:
+            value = input(prompt).strip()
         result = validator(value)
 
         if isinstance(result, bool):

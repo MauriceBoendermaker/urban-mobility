@@ -130,7 +130,7 @@ def register_traveller(first_name, last_name, birthday, gender, street_name, hou
         )
         )
         conn.commit()
-        print("System Admin created.")
+        print("Traveller created.")
     except sqlite3.IntegrityError:
         print("Traveller already exists")
     except:
@@ -170,7 +170,7 @@ def update_travellers_menu(travellers):
     house_number = get_valid_input(
         "House number: ", validate_house_number, "Invalid house number")
     zip_code = get_valid_input(
-        "Zip code: ", validate_zip_code, "Invalid zip code")
+        "Zip code: ", validate_zip_code, "Invalid zip code", True)
     print("Choose the city from the list: ")
     for c in CITIES:
         print(c)
@@ -184,7 +184,7 @@ def update_travellers_menu(travellers):
     mobile_phone = get_valid_input(
         "Mobile phone: +31 6", validate_phone_number, "Invalid phone number")
     driving_license_number = get_valid_input(
-        "Driving license number: ", validate_driving_license, "Invalid input")
+        "Driving license number: ", validate_driving_license, "Invalid input", True)
 
     mobile_phone = "+31 6" + mobile_phone
 
