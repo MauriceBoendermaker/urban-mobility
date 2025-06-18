@@ -1,5 +1,5 @@
 import sqlite3
-from utils.encryption import encrypt, decrypt, hash_password
+from utils.encryption import encrypt, decrypt, hash_password, deterministic_encrypt, deterministic_decrypt
 from utils.validation import validate_username, validate_password, validate_name
 from datetime import datetime
 from travellers.travellers import travellers_crud_menu
@@ -86,7 +86,7 @@ def create_service_engineer():
             INSERT INTO users (username_encrypted, password_hash, role, first_name_enc, last_name_enc, registration_date)
             VALUES (?, ?, ?, ?, ?, ?)
         """, (
-            encrypt(username),
+            deterministic_encrypt(username),
             hash_password(password),
             "service_engineer",
             encrypt(first_name),

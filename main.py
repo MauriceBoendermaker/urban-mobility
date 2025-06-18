@@ -1,7 +1,7 @@
 from auth.login import Login
 from utils.Sessions import is_session_valid
-from managers.service_engineer_manager import service_engineer_crud
-from menus import super_admin_menu, system_admin_menu
+
+from menus import super_admin_menu, system_admin_menu, service_engineer_menu
 
 
 def main():
@@ -16,7 +16,11 @@ def main():
             super_admin_menu.super_admin_menu()
 
         elif user[3] == "system_admin":
-            super_admin_menu.super_admin_menu()
+            system_admin_menu.system_admin_menu()
+
+        elif user[3] == "service_engineer":
+
+            service_engineer_menu.service_engineer_menu(user[3])
     else:
         print("Your session is expired")
 

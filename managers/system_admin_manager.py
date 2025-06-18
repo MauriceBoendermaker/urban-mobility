@@ -1,5 +1,6 @@
 import sqlite3
 from utils.encryption import encrypt, decrypt, hash_password, deterministic_encrypt, deterministic_decrypt
+from utils.validation import validate_username, validate_password, validate_name
 from datetime import datetime
 from travellers.travellers import travellers_crud_menu
 
@@ -37,11 +38,46 @@ def create_system_admin():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    username = input("Enter username (8-10 chars): ").strip()
-    password = input("Enter password: ").strip()
+    while True:
+        username = input("Enter username (8–10 chars): ").strip()
+        valid, errors = validate_username(username)
+        if not valid:
+            print("Username is invalid:")
+            for error in errors:
+                print(" -", error)
+        else:
+            break
 
-    first_name = input("First name: ").strip()
-    last_name = input("Last name: ").strip()
+    while True:
+        password = input("Enter password: ").strip()
+        valid, errors = validate_password(password)
+        if not valid:
+            print("Password does not meet requirements:")
+            for error in errors:
+                print(" -", error)
+        else:
+            break
+
+    while True:
+        first_name = input("First name: ").strip()
+        valid, errors = validate_name(first_name)
+        if not valid:
+            print("Invalid first name:")
+            for error in errors:
+                print(" -", error)
+        else:
+            break
+
+    while True:
+        last_name = input("Last name: ").strip()
+        valid, errors = validate_name(last_name)
+        if not valid:
+            print("Invalid last name:")
+            for error in errors:
+                print(" -", error)
+        else:
+            break
+
     reg_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     try:
@@ -56,7 +92,6 @@ def create_system_admin():
             encrypt(last_name),
             reg_date
         ))
-
         conn.commit()
         print("System Admin created.")
     except sqlite3.IntegrityError:
@@ -86,8 +121,25 @@ def update_system_admin():
     list_system_admins()
     user_id = input("Enter System Admin ID to update: ").strip()
 
-    new_fname = input("New first name: ").strip()
-    new_lname = input("New last name: ").strip()
+    while True:
+        new_fname = input("New first name: ").strip()
+        valid, errors = validate_name(new_fname)
+        if not valid:
+            print("Invalid first name:")
+            for error in errors:
+                print(" -", error)
+        else:
+            break
+
+    while True:
+        new_lname = input("New last name: ").strip()
+        valid, errors = validate_name(new_lname)
+        if not valid:
+            print("Invalid last name:")
+            for error in errors:
+                print(" -", error)
+        else:
+            break
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
