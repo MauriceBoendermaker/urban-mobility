@@ -1,8 +1,8 @@
 import sqlite3
 
 from datetime import datetime
-from .sessions import is_session_valid
-from .encryption import generate_backup_code
+from sessions import is_session_valid
+from encryption import generate_backup_code
 
 DB_PATH = "urban_mobility.db"
 

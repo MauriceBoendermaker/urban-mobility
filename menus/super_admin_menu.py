@@ -1,5 +1,5 @@
-from activity_logs import read_log
-from activity_logs import log_activity
+from activity_logs.read_log import read_log
+from activity_logs.log_activity import log_activity
 from managers.system_admin_manager import system_admin_crud
 from managers.travellers_manager import travellers_crud_menu
 from utils.backup_manager import Revoke_Backup, create_backup, restore_backup, assign_backup_to_system_admin

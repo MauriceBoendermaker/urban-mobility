@@ -1,8 +1,8 @@
 import sqlite3
 
 from datetime import datetime
-from activity_logs import log_activity
 from utils.partial_lookup import partial_lookup
+from activity_logs.log_activity import log_activity
 from utils.validation import get_valid_input, validate_latitude, validate_longitude, validate_soc_percentage, \
     validate_serial_number, validate_positive_int, validate_iso_date
 

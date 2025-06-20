@@ -1,6 +1,6 @@
 from datetime import datetime
-from .LogEntry import LogEntry
-from .write_log import write_log
+from LogEntry import LogEntry
+from write_log import write_log
 from managers.get_user import get_user
 from utils.sessions import get_user_id_from_session
 

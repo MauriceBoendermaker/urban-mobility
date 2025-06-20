@@ -1,7 +1,7 @@
 import sqlite3
 
 from utils.validation import *
-from activity_logs import log_activity
+from activity_logs.log_activity import log_activity
 from utils.encryption import deterministic_encrypt, deterministic_decrypt
 
 DB_PATH = "urban_mobility.db"

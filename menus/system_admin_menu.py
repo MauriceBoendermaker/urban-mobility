@@ -1,5 +1,5 @@
-from activity_logs import read_log
-from activity_logs import log_activity
+from activity_logs.read_log import read_log
+from activity_logs.log_activity import log_activity
 from managers.travellers_manager import travellers_crud_menu
 from managers.scooter_manager import scooter_management_menu
 from utils.backup_manager import create_backup, restore_backup

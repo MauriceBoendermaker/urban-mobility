@@ -3,8 +3,8 @@ import sqlite3
 import getpass
 
 from datetime import date
-from utils.encryption import hash_password, deterministic_encrypt, verify_password, encrypt
 from utils.sessions import create_session
+from utils.encryption import hash_password, deterministic_encrypt, verify_password, encrypt
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "..", "urban_mobility.db")
 DB_PATH = os.path.abspath(DB_PATH)

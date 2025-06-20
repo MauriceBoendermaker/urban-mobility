@@ -1,7 +1,7 @@
 import sqlite3
 
 from datetime import datetime
-from activity_logs import log_activity
+from activity_logs.log_activity import log_activity
 from utils.validation import validate_username, validate_password, validate_name
 from utils.encryption import hash_password, deterministic_encrypt, deterministic_decrypt
 
