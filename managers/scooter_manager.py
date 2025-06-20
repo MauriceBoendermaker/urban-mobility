@@ -1,4 +1,4 @@
-from Scooters.Scooters import search_scooter, update_scooter_attributes
+from scooters.scooters import search_scooter, update_scooter_attributes
 
 
 def scooter_management_menu(role):
