@@ -1,7 +1,8 @@
 import sqlite3
-from .Sessions import get_user_id_from_session
+from .Sessions import is_session_valid
 from datetime import datetime
 from .encryption import generate_backup_code
+
 DB_PATH = "urban_mobility.db"
 
 
@@ -9,8 +10,7 @@ def add_backup_to_db(backup_file, session_token, SystemAdminID):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    current_user_id = get_user_id_from_session(session_token)
-    if current_user_id is None:
+    if not is_session_valid(session_token):
         print("No valid session found. Cannot add backup.")
         return
 
@@ -37,8 +37,7 @@ def add_backup_as_system_admin(backup_file, session_token, username):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    current_user_id = get_user_id_from_session(session_token)
-    if current_user_id is None:
+    if not is_session_valid(session_token):
         print("No valid session found. Cannot add backup.")
         return
 
