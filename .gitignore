@@ -652,5 +652,5 @@ yarn-error.log
 images/
 
 .db
-urban_mobility.db
+../urban_mobility.db
 *.db
