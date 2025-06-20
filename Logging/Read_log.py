@@ -16,16 +16,16 @@ def read_log():
         reader = csv.DictReader(csvfile)
         Headers = reader.fieldnames
         for row in reader:
-            decrypt_row(row)
+            decrypted_row = decrypt_row(row)
             entry = LogEntry(
-                number=int(row['No']),
-                date=row['Date'],
-                time=row['Time'],
-                username=row['Username'],
-                user_role=row['User Role'],
-                description=row['Description'],
-                additional_info=row['Additional Info'],
-                suspicious=row['Suspicious'] == 'True'
+                number=int(decrypted_row['No']),
+                date=decrypted_row['Date'],
+                time=decrypted_row['Time'],
+                username=decrypted_row['Username'],
+                user_role=decrypted_row['User Role'],
+                description=decrypted_row['Description'],
+                additional_info=decrypted_row['Additional Info'],
+                suspicious=decrypted_row['Suspicious'] == 'True'
             )
             Entries.append(entry)
     if not Headers or not Entries:
@@ -59,7 +59,9 @@ def decrypt_headers(headers):
 
 
 def decrypt_row(entries):
-    row = {key: deterministic_decrypt(value) for key, value in entries.items()}
+    row = {deterministic_decrypt(key): deterministic_decrypt(
+        value) for key, value in entries.items()}
+
     entries.clear()
     entries.update(row)
     return entries
