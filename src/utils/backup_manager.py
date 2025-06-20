@@ -11,7 +11,7 @@ from .backup_crud import add_backup_to_db, add_backup_as_system_admin, generate_
     RevokeBackup, is_restore_allowed
 
 DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../..", "urban_mobility.db"))
-BACKUP_FOLDER = '../backups/'
+BACKUP_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "../..", "backups"))
 
 
 def create_backup(session_token):
