@@ -136,7 +136,8 @@ def validate_driving_license(license_number: str) -> tuple[bool, list[str]]:
     # RegEx voor een rijbewijs: XXDDDDDDD of XDDDDDDDD
     errors = []
     if not re.fullmatch(r"[A-Z]{1,2}\d{7}", license_number):
-        errors.append("Driving license number must match the format: XX1234567 or X1234567")
+        errors.append(
+            "Driving license number must match the format: XX1234567 or X1234567")
     return len(errors) == 0, errors
 
 
@@ -146,7 +147,8 @@ def validate_latitude(value: str) -> tuple[bool, list[str]]:
     try:
         lat = float(value)
         if not (51.8 <= lat <= 52.0):
-            errors.append("Latitude must be between 51.8 and 52.0 (Rotterdam region).")
+            errors.append(
+                "Latitude must be between 51.8 and 52.0 (Rotterdam region).")
     except ValueError:
         errors.append("Latitude must be a valid number.")
     return len(errors) == 0, errors
@@ -158,7 +160,8 @@ def validate_longitude(value: str) -> tuple[bool, list[str]]:
     try:
         lon = float(value)
         if not (4.3 <= lon <= 4.6):
-            errors.append("Longitude must be between 4.3 and 4.6 (Rotterdam region).")
+            errors.append(
+                "Longitude must be between 4.3 and 4.6 (Rotterdam region).")
     except ValueError:
         errors.append("Longitude must be a valid number.")
     return len(errors) == 0, errors
@@ -181,7 +184,8 @@ def validate_brand(brand: str) -> tuple[bool, list[str]]:
     if not brand or not brand.strip():
         errors.append("Brand cannot be empty.")
     elif not re.match(r"^[A-Za-z0-9 \-]+$", brand):
-        errors.append("Brand can only contain letters, numbers, spaces, and hyphens.")
+        errors.append(
+            "Brand can only contain letters, numbers, spaces, and hyphens.")
     return len(errors) == 0, errors
 
 
@@ -190,7 +194,8 @@ def validate_model(model: str) -> tuple[bool, list[str]]:
     if not model or not model.strip():
         errors.append("Model cannot be empty.")
     elif not re.match(r"^[A-Za-z0-9 \-]+$", model):
-        errors.append("Model can only contain letters, numbers, spaces, and hyphens.")
+        errors.append(
+            "Model can only contain letters, numbers, spaces, and hyphens.")
     return len(errors) == 0, errors
 
 
@@ -243,3 +248,18 @@ def get_valid_input(prompt, validator, error_label, toupper=False):
         print(f"{error_label}:")
         for error in errors:
             print(" -", error)
+
+
+def validate_sql_injection_attempt(password):
+    sql_injection_regex = re.compile(
+        r"""(?i)(
+        \b(SELECT|UNION\s+ALL|UNION|INSERT\s+INTO|UPDATE|DELETE\s+FROM|DROP\s+TABLE|
+        ALTER\s+TABLE|CREATE\s+TABLE|EXEC|SLEEP|GRANT|REVOKE|TRUNCATE|XP_)\b
+        |['"`]\s*(OR|AND)\s+['"`]?\d+['"`]?\s*=\s*['"`]?\d+
+        |['"`]\s*=\s*['"`]
+        |--|#|/\*|\*/|;
+        |CHAR\(|CAST\(|CONVERT\()
+    )""",
+        re.VERBOSE
+    )
+    return bool(sql_injection_regex.search(password))
