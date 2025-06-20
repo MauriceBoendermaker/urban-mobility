@@ -12,7 +12,7 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 dotenv_path = os.path.join(CURRENT_DIR, "Key.env")
 load_dotenv(dotenv_path)
 
-KEY_FILE = os.path.abspath(os.path.join(CURRENT_DIR, "..", "logs", "logkey.key"))
+KEY_FILE = os.path.abspath(os.path.join(CURRENT_DIR, "..", "log_files", "logkey.key"))
 
 # Load and decode the encryption key
 key_b64 = os.getenv("ENCRYPTION_KEY")
