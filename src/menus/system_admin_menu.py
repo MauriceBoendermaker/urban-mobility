@@ -4,6 +4,9 @@ from src.managers.travellers_manager import travellers_crud_menu
 from src.managers.scooter_manager import scooter_management_menu
 from src.utils.backup_manager import create_backup, restore_backup
 from src.managers.service_engineer_manager import service_engineer_crud
+from src.managers.get_user import get_user
+from src.utils.sessions import get_user_id_from_session
+from src.auth.auth_manager import update_own_password
 
 
 def system_admin_menu(session_token):
@@ -15,7 +18,8 @@ def system_admin_menu(session_token):
         print("4. Create Backup")
         print("5. Restore Backup")
         print("6. View Logs")
-        print("7. Logout")
+        print("7. reset password")
+        print("8. Logout")
         choice = input("Choose option: ").strip()
 
         if choice == "1":
@@ -32,7 +36,12 @@ def system_admin_menu(session_token):
             read_log()
             log_activity(session_token, "Viewed Logs")
         elif choice == "7":
+
+            update_own_password(get_user_id_from_session(session_token))
+            break
+        elif choice == "8":
             print("activity_logs out.")
             break
+
         else:
             print("Invalid choice.")
