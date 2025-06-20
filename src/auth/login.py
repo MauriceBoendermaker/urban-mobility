@@ -5,6 +5,7 @@ import getpass
 from datetime import date
 from src.utils.sessions import create_session
 from src.utils.encryption import hash_password, deterministic_encrypt, verify_password, encrypt
+from src.utils.validation import validate_sql_injection_attempt
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "../..", "urban_mobility.db")
 DB_PATH = os.path.abspath(DB_PATH)
@@ -36,14 +37,20 @@ def get_user(encrypted_username):
 
 def Login():
     while True:
+        suspicious_activity = None
         print("==== Login ====")
         username = input("Username: ").strip()
         password = getpass.getpass("Password: ").strip()
 
+
+        if validate_sql_injection_attempt(username) or validate_sql_injection_attempt(password):
+            suspicious_activity = [username, password,
+                "Possible SQL injection attempt", True]
+           
         if username == super_admin_username and password == super_admin_password:
             print("You're logged in as super admin!")
             session_token = create_session(0)
-            return (super_admin_user, session_token)
+            return (super_admin_user, session_token, suspicious_activity)
         else:
             # User met username zoeken
             encrypted_username = deterministic_encrypt(username)
@@ -59,7 +66,7 @@ def Login():
                 print(
                     f"Welcome, You're logged in as a {user_role}")
                 session_token = create_session(user_id)
-                return (user, session_token)
+                return (user, session_token, suspicious_activity)
             else:
                 print(
                     "The username or password is not correct or the account is not active")

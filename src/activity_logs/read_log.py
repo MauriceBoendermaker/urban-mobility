@@ -66,3 +66,41 @@ def decrypt_row(entries):
     entries.clear()
     entries.update(row)
     return entries
+
+
+def get_suspicious_logs():
+    if not os.path.exists(Logs_file):
+        print("Log file does not exist.")
+        return []
+
+    suspicious_entries = []
+
+    with open(Logs_file, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            decrypted_row = decrypt_row(row.copy())
+            if decrypted_row['Suspicious'] == 'True':
+                entry = LogEntry(
+                    number=int(decrypted_row['No']),
+                    date=decrypted_row['Date'],
+                    time=decrypted_row['Time'],
+                    username=decrypted_row['Username'],
+                    user_role=decrypted_row['User Role'],
+                    description=decrypted_row['Description'],
+                    additional_info=decrypted_row['Additional Info'],
+                    suspicious=True
+                )
+                suspicious_entries.append(entry)
+
+    return suspicious_entries
+
+
+def print_suspicious_logs():
+    suspicious_entries = get_suspicious_logs()
+    if not suspicious_entries:
+        print("No suspicious logs found.")
+        return
+
+    headers = ['No', 'Date', 'Time', 'Username', 'User Role',
+               'Description', 'Additional Info', 'Suspicious']
+    print(formatted_logs(headers, suspicious_entries))
