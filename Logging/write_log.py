@@ -2,7 +2,7 @@ from .LogEntry import LogEntry
 import csv
 import os
 from utils.encryption import deterministic_decrypt, deterministic_encrypt
-
+from .Read_log import decrypt_row
 Logs_file = "logs/Logs.csv"
 
 
@@ -39,7 +39,8 @@ def get_last_log_entry_number() -> int:
                 last_row = row
 
         if last_row:
-            return int(deterministic_decrypt(last_row)['No'])
+            last_row = decrypt_row(last_row)
+            return int(last_row['No'])
         return 0
     except FileNotFoundError:
         return 0

@@ -1,4 +1,4 @@
-from scooters.scooters import add_scooter, delete_scooter, update_scooter_attributes, search_scooter, list_all_scooters
+from Scooters.Scooters import add_scooter, delete_scooter, update_scooter_attributes, search_scooter, list_all_scooters
 from auth.login import get_user
 
 

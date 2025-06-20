@@ -94,4 +94,4 @@ def is_restore_allowed(filename, code, user_id):
         return False
 
     conn.close()
-    return used == 0 and allowed_user == user_id and one_use_code == code and not revoked
+    return used == 0 and int(allowed_user) == user_id and one_use_code == code and not revoked
