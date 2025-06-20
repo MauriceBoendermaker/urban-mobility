@@ -1,12 +1,10 @@
+import sqlite3
 from utils.encryption import encrypt, decrypt, hash_password, deterministic_encrypt, deterministic_decrypt
 from datetime import datetime
-import sqlite3
-from travellers.Cities import CITIES
+from travellers import Cities
 from utils.validation import *
 
-
 DB_PATH = "urban_mobility.db"
-
 
 conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
@@ -14,13 +12,12 @@ cursor = conn.cursor()
 
 def travellers_crud_menu():
     while True:
-        print("--- travellers management ---")
+        print("\n--- Travellers Management ---")
         print("1. Show all travellers")
         print("2. Register a new traveller")
         print("3. Update traveller")
         print("4. Delete traveller")
         print("5. Go back to the previous menu")
-
         choice = input("Choose an option: ").strip()
 
         if choice == "1":
@@ -29,19 +26,18 @@ def travellers_crud_menu():
                 print("No travellers found!")
             else:
                 list_travellers(travellers)
-
         elif choice == "2":
             register_traveller_menu()
         elif choice == "3":
             travellers = show_all_travellers()
             if travellers == None:
-                print("No travellers found!")
+                print("\nNo travellers found!")
             else:
                 update_travellers_menu(travellers)
         elif choice == "4":
             travellers = show_all_travellers()
             if travellers == None:
-                print("No travellers found!")
+                print("\nNo travellers found!")
             else:
                 delete_traveller_menu(travellers)
         elif choice == "5":
@@ -58,8 +54,7 @@ def show_all_travellers():
 
 
 def register_traveller_menu():
-
-    print("--- register a new traveller ---")
+    print("\n--- Register a new traveller ---")
 
     first_name = get_valid_input(
         "First name: ", validate_name, "First name is not valid")
@@ -107,7 +102,8 @@ def register_traveller_menu():
     )
 
 
-def register_traveller(first_name, last_name, birthday, gender, street_name, house_number, zip_code, city, email_address, mobile_phone, driving_license_number):
+def register_traveller(first_name, last_name, birthday, gender, street_name, house_number, zip_code, city,
+                       email_address, mobile_phone, driving_license_number):
     try:
 
         cursor.execute("""
@@ -128,7 +124,7 @@ def register_traveller(first_name, last_name, birthday, gender, street_name, hou
             deterministic_encrypt(
                 datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
         )
-        )
+                       )
         conn.commit()
         print("Traveller created.")
     except sqlite3.IntegrityError:
@@ -204,7 +200,8 @@ def update_travellers_menu(travellers):
     )
 
 
-def update_traveller(id, first_name, last_name, birthday, gender, street_name, house_number, zip_code, city, email_address, mobile_phone, driving_license_number):
+def update_traveller(id, first_name, last_name, birthday, gender, street_name, house_number, zip_code, city,
+                     email_address, mobile_phone, driving_license_number):
     try:
         cursor.execute("""
             UPDATE travellers
@@ -267,7 +264,6 @@ def list_travellers(travellers):
     print("--- Travellers ---")
 
     for t in travellers:
-
         traveller_id, first_name, last_name, birthday, gender, street_name, house_number, zip_code, city, email_address, mobile_phone, driving_license_number, registration_date = t
         print(
             f"""ID: {traveller_id}, Full name: {deterministic_decrypt(first_name)} {deterministic_decrypt(last_name)}, """
