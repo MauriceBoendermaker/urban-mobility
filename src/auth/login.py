@@ -24,6 +24,9 @@ super_admin_user = (
     1
 )
 
+MAX_ATTEMPTS = 3
+login_attempts = {}
+
 
 def get_user(encrypted_username):
     conn = sqlite3.connect(DB_PATH)
@@ -42,34 +45,43 @@ def Login():
         username = input("Username: ").strip()
         password = getpass.getpass("Password: ").strip()
 
+        login_attempts[username] = login_attempts.get(username, 0)
 
         if validate_sql_injection_attempt(username) or validate_sql_injection_attempt(password):
             suspicious_activity = [username, password,
-                "Possible SQL injection attempt", True]
-           
+                                   "Possible SQL injection attempt", True]
+
         if username == super_admin_username and password == super_admin_password:
             print("You're logged in as super admin!")
             session_token = create_session(0)
+            login_attempts[username] = 0  # reset on success
             return (super_admin_user, session_token, suspicious_activity)
         else:
-            # User met username zoeken
             encrypted_username = deterministic_encrypt(username)
             user = get_user(encrypted_username=encrypted_username)
-            if user == None:
+
+            if user is None:
                 print(
                     "The username or password is not correct or the account is not active")
-                continue
-            # (user_id, username_encrypt, password_hash, role, first_name_enc, last_name_enc, registration_date, is_active)
-            user_id, password_hash, is_active, user_role = user[
-                0], user[2], user[7], user[3]
-            if verify_password(password, password_hash) and is_active == 1:
-                print(
-                    f"Welcome, You're logged in as a {user_role}")
-                session_token = create_session(user_id)
-                return (user, session_token, suspicious_activity)
+                login_attempts[username] += 1
             else:
-                print(
-                    "The username or password is not correct or the account is not active")
+                user_id, password_hash, is_active, user_role = user[0], user[2], user[7], user[3]
+                if verify_password(password, password_hash) and is_active == 1:
+                    print(f"Welcome, You're logged in as a {user_role}")
+                    session_token = create_session(user_id)
+                    login_attempts[username] = 0  # reset on success
+                    return (user, session_token, suspicious_activity)
+                else:
+                    print(
+                        "The username or password is not correct or the account is not active")
+                    login_attempts[username] += 1
+
+        if login_attempts[username] >= MAX_ATTEMPTS:
+            print(f"Too many failed attempts for '{username}'")
+            suspicious_activity = [username, password,
+                                   f"{MAX_ATTEMPTS} failed login attempts", True]
+            login_attempts[username] = 0
+            return (None, None, suspicious_activity)
 
 
 def get_user(encrypted_username):
