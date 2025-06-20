@@ -601,12 +601,12 @@ bower_components/
 .vscode/
 .history
 
-# PM2 (process manager) logs
+# PM2 (process manager) log_files
 pids/
 pm2-logs/
 pm2*
 
-# Serverless Framework and deployment logs
+# Serverless Framework and deployment log_files
 .serverless/
 .webpack/
 dist/
