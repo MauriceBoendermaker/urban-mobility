@@ -67,15 +67,19 @@ def assign_backup_to_system_admin(session_token):
             backup_file, session_token, SystemAdminID)
 
 
-def restore_backup(backup_file):
-    if not os.path.exists(backup_file):
-        print(f"Backup file {backup_file} does not exist.")
+def restore_backup():
+
+    backup_file = choose_backup_file()
+
+    path = os.path.join(BACKUP_FOLDER, backup_file)
+    if not os.path.exists(path):
+        print(f"Backup file {path} does not exist.")
         return
 
-    with zipfile.ZipFile(backup_file, 'r') as zipf:
+    with zipfile.ZipFile(path, 'r') as zipf:
         zipf.extractall(BACKUP_FOLDER)
 
-    print(f"Backup restored from {backup_file}.")
+    print(f"Backup restored from {path}.")
     # Optionally, you can also copy the restored DB to the original location
     shutil.copy(os.path.join(BACKUP_FOLDER, 'data.db'), DB_PATH)
     print("Database restored to original location.")

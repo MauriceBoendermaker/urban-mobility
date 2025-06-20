@@ -43,9 +43,7 @@ def manage_backups(session_token):
         if choice == "1":
             create_backup(session_token)
         elif choice == "2":
-            backup_file = input(
-                "Enter the path of the backup file to restore: ").strip()
-            restore_backup(backup_file)
+            restore_backup()
         elif choice == "3":
             assign_backup_to_system_admin(session_token=session_token)
         elif choice == "4":
