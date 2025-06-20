@@ -19,7 +19,6 @@ def scooter_management_menu(session_token):
             print("4. Delete scooter")
         print("5. List all scooters")
         print("6. Back")
-
         choice = input("Choose option: ").strip()
 
         if choice == "1":
