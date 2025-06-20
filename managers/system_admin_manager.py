@@ -111,6 +111,7 @@ def list_system_admins():
             f"[{user_id}] {deterministic_decrypt(username_enc)} | {decrypt(fname_enc)} {decrypt(lname_enc)}")
 
     conn.close()
+    return rows
 
 
 def update_system_admin():

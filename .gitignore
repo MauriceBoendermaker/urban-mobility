@@ -651,4 +651,6 @@ yarn-error.log
 # Images folder
 images/
 
+.db
+urban_mobility.db
 *.db

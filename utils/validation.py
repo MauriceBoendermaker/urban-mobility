@@ -139,28 +139,70 @@ def validate_driving_license(license_number: str) -> tuple[bool, list[str]]:
     return len(errors) == 0, errors
 
 
-def validate_latitude(lat: float) -> bool:
+def validate_latitude(value: str) -> tuple[bool, list[str]]:
     # Rotterdam heeft een latitude van ongeveer 51.8 ~ 52.0
-    return 51.8 <= lat <= 52.0
+    errors = []
+    try:
+        lat = float(value)
+        if not (51.8 <= lat <= 52.0):
+            errors.append("Latitude must be between 51.8 and 52.0 (Rotterdam region).")
+    except ValueError:
+        errors.append("Latitude must be a valid number.")
+    return len(errors) == 0, errors
 
 
-def validate_longitude(lon: float) -> bool:
+def validate_longitude(value: str) -> tuple[bool, list[str]]:
     # Rotterdam heeft een longitude van ongeveer 4.3 ~ 4.6
-    return 4.3 <= lon <= 4.6
+    errors = []
+    try:
+        lon = float(value)
+        if not (4.3 <= lon <= 4.6):
+            errors.append("Longitude must be between 4.3 and 4.6 (Rotterdam region).")
+    except ValueError:
+        errors.append("Longitude must be a valid number.")
+    return len(errors) == 0, errors
 
 
-def validate_soc_percentage(value: int) -> bool:
+def validate_soc_percentage(value: str) -> tuple[bool, list[str]]:
     # State of Charge (SoC) range
-    return 0 <= value <= 100
+    errors = []
+    try:
+        val = int(value)
+        if not (0 <= val <= 100):
+            errors.append("Value must be between 0 and 100.")
+    except ValueError:
+        errors.append("Value must be a number.")
+    return len(errors) == 0, errors
 
 
-def validate_iso_date(date_str: str) -> bool:
-    # Dateformat YYYY-MM-DD
+def validate_serial_number(serial: str) -> tuple[bool, list[str]]:
+    errors = []
+    if not (10 <= len(serial) <= 17):
+        errors.append("Serial number must be between 10 and 17 characters.")
+    if not re.fullmatch(r"[A-Za-z0-9]{10,17}", serial):
+        errors.append("Serial number must be alphanumeric.")
+    return len(errors) == 0, errors
+
+
+def validate_iso_date(date_str: str) -> tuple[bool, list[str]]:
+    errors = []
     try:
         datetime.strptime(date_str, "%Y-%m-%d")
-        return True
+        return True, []
     except ValueError:
-        return False
+        errors.append("Date must follow format YYYY-MM-DD.")
+        return False, errors
+
+
+def validate_positive_int(value: str) -> tuple[bool, list[str]]:
+    errors = []
+    try:
+        int_value = int(value)
+        if int_value <= 0:
+            errors.append("Value must be greater than 0.")
+    except ValueError:
+        errors.append("Value must be a valid number.")
+    return len(errors) == 0, errors
 
 
 def get_valid_input(prompt, validator, error_label, toupper=False):
