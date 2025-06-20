@@ -1,13 +1,14 @@
 from managers.system_admin_manager import system_admin_crud
 from managers.travellers_manager import travellers_crud_menu
 from utils.backup_manager import Revoke_Backup, create_backup, restore_backup, assign_backup_to_system_admin
+from Logging.Read_log import read_log
 
 
 def super_admin_menu(session_token):
     while True:
         print("\n--- Super Admin Menu ---")
         print("1. Manage System Administrators")
-        print("2. View Logs (komt binnenkort)")
+        print("2. View Logs")
         print("3. Manage Travellers")
         print("4. Manage Backups")
         print("5. Logout")
@@ -16,7 +17,7 @@ def super_admin_menu(session_token):
         if choice == "1":
             system_admin_crud()
         elif choice == "2":
-            print("Logs komt hierna.")
+            read_log()
         elif choice == "3":
             travellers_crud_menu()
         elif choice == "4":
