@@ -28,7 +28,7 @@ def add_backup_to_db(backup_file, session_token, SystemAdminID):
 
     cursor.execute('''INSERT INTO backups (filename, created_by, datetime, one_use_code, used, allowed_user, revoked)
                       VALUES (?, ?, ?, ?, ?, ?, ?)''', (
-    backup_file, "super_admin", datetime.now().strftime('%Y%m%d'), backup_code, False, SystemAdminID, False))
+        backup_file, "super_admin", datetime.now().strftime('%Y%m%d'), backup_code, False, SystemAdminID, False))
 
     conn.commit()
     conn.close()
