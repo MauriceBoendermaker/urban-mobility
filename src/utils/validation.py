@@ -1,7 +1,12 @@
 import re
+import os
+import sqlite3
 
-from src.travellers.cities import CITIES
 from datetime import datetime
+from src.travellers.cities import CITIES
+from src.utils.encryption import deterministic_encrypt
+
+DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../..", "urban_mobility.db"))
 
 
 def validate_city_number(user_input: str) -> tuple[bool, list[str]]:
@@ -72,6 +77,7 @@ def validate_username(username: str) -> tuple[bool, list[str]]:
     - 8-10 tekens
     - Moet beginnen met een letter of underscore
     - Mag letters, cijfers, underscores, punten en apostrofs bevatten
+    - Moet uniek zijn in de database
     - Niet hoofdlettergevoelig
     """
     errors = []
@@ -81,8 +87,16 @@ def validate_username(username: str) -> tuple[bool, list[str]]:
     if not re.match(r"^[A-Za-z_]", username):
         errors.append("Username must start with a letter or underscore.")
     if not re.match(r"^[A-Za-z_][A-Za-z0-9_'.]{7,9}$", username):
-        errors.append(
-            "Username can only contain letters, digits, underscore (_), apostrophe ('), and period (.)")
+        errors.append("Username can only contain letters, digits, underscore (_), apostrophe ('), and period (.)")
+
+    # Check op uniekheid
+    encrypted_username = deterministic_encrypt(username)
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT 1 FROM users WHERE username_encrypted = ?", (encrypted_username,))
+    if cursor.fetchone():
+        errors.append("Username already exists.")
+    conn.close()
 
     return len(errors) == 0, errors
 
