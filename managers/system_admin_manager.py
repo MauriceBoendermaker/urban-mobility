@@ -20,7 +20,6 @@ def system_admin_crud(session_token):
 
         if choice == "1":
             create_system_admin(session_token)
-
         elif choice == "2":
             list_system_admins(session_token)
         elif choice == "3":
