@@ -1,6 +1,65 @@
 import sqlite3
+from datetime import datetime
+from utils.validation import get_valid_input, validate_latitude, validate_longitude, validate_soc_percentage
 
 DB_PATH = "urban_mobility.db"
+
+
+def add_scooter():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    brand = input("Enter brand: ").strip()
+    model = input("Enter model: ").strip()
+    serial = input("Enter serial number (10–17 chars): ").strip()
+
+    top_speed = int(input("Enter top speed (km/h): "))
+    battery_capacity = int(input("Enter battery capacity (Wh): "))
+    soc = int(get_valid_input("Enter SoC (%): ", validate_soc_percentage, "Invalid SoC"))
+    soc_min = int(get_valid_input("Enter SoC target min: ", validate_soc_percentage, "Invalid min SoC"))
+    soc_max = int(get_valid_input("Enter SoC target max: ", validate_soc_percentage, "Invalid max SoC"))
+    lat = float(get_valid_input("Enter latitude: ", validate_latitude, "Invalid latitude"))
+    lon = float(get_valid_input("Enter longitude: ", validate_longitude, "Invalid longitude"))
+    mileage = int(input("Enter mileage (km): "))
+    maintenance_date = input("Enter last maintenance date (YYYY-MM-DD): ").strip()
+    in_service_date = datetime.now().isoformat()
+
+    cursor.execute("""
+        INSERT INTO scooters (
+            brand, model, serial_number, top_speed, battery_capacity, soc_percentage,
+            soc_target_min, soc_target_max, location_latitude, location_longitude,
+            out_of_service, mileage_km, last_maintenance, in_service_date
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?)
+    """, (brand, model, serial, top_speed, battery_capacity, soc,
+          soc_min, soc_max, lat, lon, mileage, maintenance_date, in_service_date))
+
+    conn.commit()
+    conn.close()
+    print("Scooter added.")
+
+
+def delete_scooter():
+    serial = input("Enter serial number to delete: ").strip()
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM scooters WHERE serial_number = ?", (serial,))
+    conn.commit()
+    conn.close()
+    print("Scooter deleted.")
+
+
+def list_all_scooters():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM scooters")
+    scooters = cursor.fetchall()
+    conn.close()
+
+    if scooters:
+        for s in scooters:
+            print(s)
+    else:
+        print("No scooters found.")
 
 
 def search_scooter():
