@@ -131,9 +131,12 @@ def validate_phone_number(phone: str) -> bool:
     return re.match(r"^\d{8}$", phone) is not None
 
 
-def validate_driving_license(license_number: str) -> bool:
+def validate_driving_license(license_number: str) -> tuple[bool, list[str]]:
     # RegEx voor een rijbewijs: XXDDDDDDD of XDDDDDDDD
-    return re.match(r"^[A-Z]{1,2}\d{7}$", license_number) is not None
+    errors = []
+    if not re.fullmatch(r"[A-Z]{1,2}\d{7}", license_number):
+        errors.append("Driving license number must match the format: XX1234567 or X1234567")
+    return len(errors) == 0, errors
 
 
 def validate_latitude(lat: float) -> bool:
