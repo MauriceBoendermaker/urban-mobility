@@ -16,6 +16,7 @@ def service_engineer_menu(session_token):
         elif choice == "2":
             user_id = get_user_id_from_session(session_token)
             update_own_password(user_id)
+
         elif choice == "3":
             print("Logged out.")
             break
