@@ -12,6 +12,10 @@ BACKUP_FOLDER = '../backups/'
 
 def create_backup(session_token):
 
+    current_user_id = get_user_id_from_session(session_token)
+    if current_user_id is None:
+        print("No valid session found. Cannot add backup.")
+        return
     if not os.path.exists(BACKUP_FOLDER):
         os.makedirs(BACKUP_FOLDER)
 
@@ -26,10 +30,6 @@ def create_backup(session_token):
     print(f"Backup created: {zip_path}")
     print("Adding backup to database...")
 
-    current_user_id = get_user_id_from_session(session_token)
-    if current_user_id is None:
-        print("No valid session found. Cannot add backup.")
-        return
     if current_user_id == 0:
 
         SystemAdminID = choose_system_admin()
