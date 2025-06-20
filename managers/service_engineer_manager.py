@@ -14,8 +14,7 @@ def service_engineer_crud():
         print("2. View Service Engineers")
         print("3. Update Service Engineer")
         print("4. Delete Service Engineer")
-        print("5. Manage travellers")
-        print("6. Back to Main Menu")
+        print("5. Back to Main Menu")
         choice = input("Choose an option: ").strip()
 
         if choice == "1":
@@ -27,8 +26,6 @@ def service_engineer_crud():
         elif choice == "4":
             delete_service_engineer()
         elif choice == "5":
-            travellers_crud_menu()
-        elif choice == "6":
             break
         else:
             print("Invalid option.")

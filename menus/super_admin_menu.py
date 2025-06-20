@@ -8,7 +8,7 @@ def super_admin_menu(session_token):
         print("\n--- Super Admin Menu ---")
         print("1. Manage System Administrators")
         print("2. View Logs (komt binnenkort)")
-        print("3. Manage travellers")
+        print("3. Manage Travellers")
         print("4. Manage Backups")
         print("5. Logout")
         choice = input("Choose an option: ").strip()

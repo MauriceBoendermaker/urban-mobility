@@ -7,7 +7,7 @@ def system_admin_menu(session_token):
     while True:
         print("\n--- System Admin Menu ---")
         print("1. Manage Service Engineers")
-        print("2. Manage travellers")
+        print("2. Manage Travellers")
         print("3. Create Backup")
         print("4. Restore Backup")
         print("5. Logout")
