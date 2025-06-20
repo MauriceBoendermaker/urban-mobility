@@ -6,8 +6,8 @@ from datetime import datetime
 from managers.get_user import get_user
 from activity_logs.log_activity import log_activity
 from menus.choose_system_admin import choose_system_admin
-from sessions import get_user_id_from_session, is_session_valid
-from backup_crud import add_backup_to_db, add_backup_as_system_admin, generate_backup_code_for_system_admin, \
+from .sessions import get_user_id_from_session, is_session_valid
+from .backup_crud import add_backup_to_db, add_backup_as_system_admin, generate_backup_code_for_system_admin, \
     RevokeBackup, is_restore_allowed
 
 DB_PATH = 'urban_mobility.db'

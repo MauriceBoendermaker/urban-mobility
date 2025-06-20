@@ -1,7 +1,7 @@
 import os
 import csv
 
-from LogEntry import LogEntry
+from .LogEntry import LogEntry
 from utils.encryption import deterministic_decrypt
 
 Logs_file = "logs/Logs.csv"
