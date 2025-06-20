@@ -18,7 +18,8 @@ def travellers_crud_menu(session_token):
         print("2. Register a new traveller")
         print("3. Update traveller")
         print("4. Delete traveller")
-        print("5. Go back to the previous menu")
+        print("5. Search traveller")
+        print("6. Go back to the previous menu")
         choice = input("Choose an option: ").strip()
 
         if choice == "1":
@@ -43,9 +44,10 @@ def travellers_crud_menu(session_token):
             else:
                 delete_traveller_menu(travellers, session_token)
         elif choice == "5":
+            search_travellers_menu()
+            log_activity(session_token, "Searched for travellers")
+        elif choice == "6":
             break
-        else:
-            print("Invalid option.")
 
 
 def show_all_travellers():
@@ -53,6 +55,41 @@ def show_all_travellers():
         "SELECT * FROM travellers").fetchall()
 
     return travellers if len(travellers) > 0 else None
+
+
+def search_travellers_menu():
+    print("\n--- Search Travellers ---")
+    search_term = input("Enter a name, email, or ID to search: ").strip().lower()
+
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM travellers")
+    travellers = cursor.fetchall()
+    conn.close()
+
+    matches = []
+
+    for t in travellers:
+        traveller_id, first_name, last_name, birthday, gender, street_name, house_number, zip_code, city, email_address, mobile_phone, driving_license_number, registration_date = t
+
+        try:
+            if (
+                    search_term in str(traveller_id).lower()
+                    or search_term in deterministic_decrypt(first_name).lower()
+                    or search_term in deterministic_decrypt(last_name).lower()
+                    or search_term in deterministic_decrypt(email_address).lower()
+                    or search_term in deterministic_decrypt(mobile_phone).lower()
+                    or search_term in deterministic_decrypt(driving_license_number).lower()
+            ):
+                matches.append(t)
+        except Exception as e:
+            print(f"[!] Skipping a record due to decryption error: {e}")
+
+    if not matches:
+        print("No travellers found matching your search.")
+    else:
+        print(f"\nFound {len(matches)} result(s):\n")
+        list_travellers(matches)
 
 
 def register_traveller_menu(session_token):
