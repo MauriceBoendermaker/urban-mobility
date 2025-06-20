@@ -6,16 +6,17 @@ from datetime import datetime
 from menus.Choose_system_admin import choose_system_admin
 from managers.system_admin_manager import get_user
 from .Sessions import get_user_id_from_session, is_session_valid
+from Logging.log_activity import log_activity
 DB_PATH = 'urban_mobility.db'
 BACKUP_FOLDER = '../backups/'
 
 
 def create_backup(session_token):
 
-    current_user_id = get_user_id_from_session(session_token)
-    if current_user_id is None:
+    if not is_session_valid(session_token):
         print("No valid session found. Cannot add backup.")
         return
+    current_user_id = get_user_id_from_session(session_token)
     if not os.path.exists(BACKUP_FOLDER):
         os.makedirs(BACKUP_FOLDER)
 
@@ -29,6 +30,7 @@ def create_backup(session_token):
     # call add_backup_to_db to add the backup entry to the database
     print(f"Backup created: {zip_path}")
     print("Adding backup to database...")
+    log_activity(session_token, "Added backup", additional_info=zip_filename)
 
     if current_user_id == 0:
 
@@ -69,6 +71,9 @@ def assign_backup_to_system_admin(session_token):
 
 def restore_backup(session_token):
 
+    if not is_session_valid(session_token):
+        print("No valid session found. Cannot restore backup.")
+        return
     user_id = get_user_id_from_session(session_token)
     user = get_user(user_id)
 
