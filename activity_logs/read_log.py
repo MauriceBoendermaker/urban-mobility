@@ -1,5 +1,6 @@
 import os
 import csv
+
 from .LogEntry import LogEntry
 from utils.encryption import deterministic_decrypt
 

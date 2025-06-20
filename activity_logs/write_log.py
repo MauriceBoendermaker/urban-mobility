@@ -1,8 +1,10 @@
-from .LogEntry import LogEntry
-import csv
 import os
-from utils.encryption import deterministic_decrypt, deterministic_encrypt
-from .Read_log import decrypt_row
+import csv
+
+from .LogEntry import LogEntry
+from .read_log import decrypt_row
+from utils.encryption import deterministic_encrypt
+
 Logs_file = "logs/Logs.csv"
 
 
@@ -21,7 +23,7 @@ def write_log(log_entry: LogEntry):
         with open(Logs_file, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([deterministic_encrypt(header)
-                            for header in headers])
+                             for header in headers])
 
     with open(Logs_file, mode='a', newline='') as file:
         writer = csv.writer(file)
