@@ -1,4 +1,4 @@
-from .backup_crud import add_backup_to_db, add_backup_as_system_admin, generate_backup_code_for_system_admin, RevokeBackup
+from .backup_crud import add_backup_to_db, add_backup_as_system_admin, generate_backup_code_for_system_admin, RevokeBackup, is_restore_allowed, is_restore_allowed
 import os
 import shutil
 import zipfile
@@ -67,9 +67,23 @@ def assign_backup_to_system_admin(session_token):
             backup_file, session_token, SystemAdminID)
 
 
-def restore_backup():
+def restore_backup(session_token):
 
+    user_id = get_user_id_from_session(session_token)
+    user = get_user(user_id)
+
+    if user is None:
+        print("No valid user found. Cannot restore backup.")
+        return
     backup_file = choose_backup_file()
+
+    if user['role'] != 'super_admin':
+        one_use_code = input("Enter the one-use code for the backup: ").strip()
+        allowed = is_restore_allowed(
+            backup_file, one_use_code, user_id)
+        if not allowed:
+            print("You are not allowed to restore this backup.")
+            return
 
     path = os.path.join(BACKUP_FOLDER, backup_file)
     if not os.path.exists(path):

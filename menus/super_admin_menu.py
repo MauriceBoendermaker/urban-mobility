@@ -43,11 +43,11 @@ def manage_backups(session_token):
         if choice == "1":
             create_backup(session_token)
         elif choice == "2":
-            restore_backup()
+            restore_backup(session_token)
         elif choice == "3":
             assign_backup_to_system_admin(session_token=session_token)
         elif choice == "4":
-            
+
             Revoke_Backup()
         elif choice == "5":
             print("Returning to Super Admin Menu.")

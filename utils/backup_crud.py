@@ -44,7 +44,7 @@ def add_backup_as_system_admin(backup_file, session_token, username):
 
     # Insert the backup file entry
     cursor.execute('''INSERT INTO backups (filename, created_by, datetime, one_use_code, used, allowed_user, revoked)
-                      VALUES (?, ?, ?, ?, ?, ?)''', (backup_file, username, datetime.now().strftime('%Y%m%d'), None, False, None, False))
+                      VALUES (?, ?, ?, ?, ?, ?, ?)''', (backup_file, username, datetime.now().strftime('%Y%m%d'), None, False, None, False))
 
     conn.commit()
     conn.close()
@@ -79,3 +79,20 @@ def RevokeBackup(backup_file):
 
     conn.commit()
     conn.close()
+
+
+def is_restore_allowed(filename, code, user_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    cursor.execute('''SELECT * FROM backups
+                      WHERE filename = ? ''', (filename,))
+    backup = cursor.fetchone()
+    filename, one_use_code,  used, allowed_user, revoked = backup[
+        1], backup[4], backup[5], backup[6], backup[7]
+    if backup is None:
+        print("Invalid backup file or code.")
+        return False
+
+    conn.close()
+    return used == 0 and allowed_user == user_id and one_use_code == code and not revoked
