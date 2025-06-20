@@ -26,3 +26,27 @@ def update_own_password(user_id):
     conn.close()
 
     print("Password updated successfully.")
+
+
+def delete_own_account(user_id):
+    delete = False
+    while True:
+        confirm = input(
+            "Are you sure you want to delete your own account (y/n)? ").upper()
+        if confirm == "Y":
+            delete = True
+            break
+        if confirm == "N":
+            delete = False
+            break
+
+    if delete:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM users WHERE user_id=?",
+                       (user_id, ))
+        conn.commit()
+        conn.close()
+        return True
+    else:
+        return False
