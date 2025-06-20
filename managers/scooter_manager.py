@@ -1,8 +1,15 @@
 from scooters.scooters import add_scooter, delete_scooter, update_scooter_attributes, search_scooter, list_all_scooters
 from auth.login import get_user
+from utils.Sessions import get_user_id_from_session
 
 
-def scooter_management_menu(role):
+def scooter_management_menu(session_token):
+    user_id = get_user_id_from_session(session_token)
+    user = get_user(user_id)
+    if user is None:
+        print("No valid user found. Cannot access scooter management.")
+        return
+    role = user['role']
     while True:
         print("\n--- Scooter Management ---")
         print("1. Search scooter")
@@ -16,15 +23,15 @@ def scooter_management_menu(role):
         choice = input("Choose option: ").strip()
 
         if choice == "1":
-            search_scooter()
+            search_scooter(session_token)
         elif choice == "2":
-            update_scooter_attributes(role)
+            update_scooter_attributes(role, session_token)
         elif choice == "3" and role != "service_engineer":
-            add_scooter()
+            add_scooter(session_token)
         elif choice == "4" and role != "service_engineer":
-            delete_scooter()
+            delete_scooter(session_token)
         elif choice == "5":
-            list_all_scooters()
+            list_all_scooters(session_token)
         elif choice == "6":
             break
         else:

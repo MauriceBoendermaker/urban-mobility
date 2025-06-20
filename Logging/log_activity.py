@@ -1,5 +1,5 @@
 from utils.Sessions import get_user_id_from_session
-from managers.system_admin_manager import get_user
+from managers.get_user import get_user
 from datetime import datetime
 from .write_log import write_log
 from .LogEntry import LogEntry

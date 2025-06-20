@@ -2,6 +2,7 @@ from managers.system_admin_manager import system_admin_crud
 from managers.travellers_manager import travellers_crud_menu
 from utils.backup_manager import Revoke_Backup, create_backup, restore_backup, assign_backup_to_system_admin
 from Logging.Read_log import read_log
+from Logging.log_activity import log_activity
 
 
 def super_admin_menu(session_token):
@@ -15,11 +16,12 @@ def super_admin_menu(session_token):
         choice = input("Choose an option: ").strip()
 
         if choice == "1":
-            system_admin_crud()
+            system_admin_crud(session_token)
         elif choice == "2":
             read_log()
+            log_activity(session_token, "Viewed Logs")
         elif choice == "3":
-            travellers_crud_menu()
+            travellers_crud_menu(session_token)
         elif choice == "4":
             manage_backups(session_token)
         elif choice == "5":

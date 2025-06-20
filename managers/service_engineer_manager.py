@@ -1,5 +1,6 @@
 import sqlite3
-from utils.encryption import encrypt, decrypt, hash_password, deterministic_encrypt
+from Logging.log_activity import log_activity
+from utils.encryption import encrypt, decrypt, hash_password, deterministic_encrypt, deterministic_decrypt
 from utils.validation import validate_username, validate_password, validate_name
 from datetime import datetime
 from managers.travellers_manager import travellers_crud_menu
@@ -7,7 +8,7 @@ from managers.travellers_manager import travellers_crud_menu
 DB_PATH = "urban_mobility.db"
 
 
-def service_engineer_crud():
+def service_engineer_crud(session_token):
     while True:
         print("\n--- Service Engineer Management ---")
         print("1. Create Service Engineer")
@@ -18,20 +19,20 @@ def service_engineer_crud():
         choice = input("Choose an option: ").strip()
 
         if choice == "1":
-            create_service_engineer()
+            create_service_engineer(session_token)
         elif choice == "2":
-            list_service_engineers()
+            list_service_engineers(session_token)
         elif choice == "3":
-            update_service_engineer()
+            update_service_engineer(session_token)
         elif choice == "4":
-            delete_service_engineer()
+            delete_service_engineer(session_token)
         elif choice == "5":
             break
         else:
             print("Invalid option.")
 
 
-def create_service_engineer():
+def create_service_engineer(session_token):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
@@ -85,19 +86,26 @@ def create_service_engineer():
             deterministic_encrypt(username),
             hash_password(password),
             "service_engineer",
-            encrypt(first_name),
-            encrypt(last_name),
+            deterministic_encrypt(first_name),
+            deterministic_encrypt(last_name),
             reg_date
         ))
         conn.commit()
         print("Service Engineer created.")
+        log_activity(session_token, f"Created Service Engineer: {username}")
     except sqlite3.IntegrityError:
         print("Username already exists.")
+        log_activity(
+            session_token, f"Failed to create Service Engineer: {username} (Username exists)")
+    except Exception as e:
+        print(f"Error creating Service Engineer")
+        log_activity(
+            session_token, f"Error creating Service Engineer: {username}", str(e))
     finally:
         conn.close()
 
 
-def list_service_engineers():
+def list_service_engineers(session_token=None):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
@@ -106,15 +114,23 @@ def list_service_engineers():
     rows = cursor.fetchall()
 
     print("\n--- Service Engineers ---")
-    for row in rows:
-        user_id, username_enc, fname_enc, lname_enc = row
-        print(
-            f"[{user_id}] {decrypt(username_enc)} | {decrypt(fname_enc)} {decrypt(lname_enc)}")
+    try:
 
-    conn.close()
+        for row in rows:
+            user_id, username_enc, fname_enc, lname_enc = row
+            print(
+                f"[{user_id}] {deterministic_decrypt(username_enc)} | {deterministic_decrypt(fname_enc)} {deterministic_decrypt(lname_enc)}")
+            if session_token:
+                log_activity(
+                    session_token, f"Viewed Service Engineer: {deterministic_decrypt(username_enc)}")
+    except Exception as e:
+        print("Error retrieving service engineers")
+        log_activity(session_token, "Error listing Service Engineers", str(e))
+    finally:
+        conn.close()
 
 
-def update_service_engineer():
+def update_service_engineer(session_token):
     list_service_engineers()
     user_id = input("Enter Service Engineer ID to update: ").strip()
 
@@ -127,14 +143,15 @@ def update_service_engineer():
         UPDATE users
         SET first_name_enc=?, last_name_enc=?
         WHERE user_id=? AND role='service_engineer'
-    """, (encrypt(new_fname), encrypt(new_lname), user_id))
+    """, (deterministic_encrypt(new_fname), deterministic_encrypt(new_lname), user_id))
 
     conn.commit()
     conn.close()
     print("Service Engineer updated.")
+    log_activity(session_token, f"Updated Service Engineer ID: {user_id}")
 
 
-def delete_service_engineer():
+def delete_service_engineer(session_token):
     list_service_engineers()
     user_id = input("Enter Service Engineer ID to delete: ").strip()
 
@@ -145,3 +162,4 @@ def delete_service_engineer():
     conn.commit()
     conn.close()
     print("Service Engineer deleted.")
+    log_activity(session_token, f"Deleted Service Engineer ID: {user_id}")

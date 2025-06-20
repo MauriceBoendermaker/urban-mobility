@@ -3,6 +3,7 @@ from utils.encryption import encrypt, decrypt, hash_password, deterministic_encr
 from datetime import datetime
 from travellers import Cities
 from utils.validation import *
+from Logging.log_activity import log_activity
 
 DB_PATH = "urban_mobility.db"
 
@@ -10,7 +11,7 @@ conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
 
 
-def travellers_crud_menu():
+def travellers_crud_menu(session_token):
     while True:
         print("\n--- Travellers Management ---")
         print("1. Show all travellers")
@@ -26,20 +27,21 @@ def travellers_crud_menu():
                 print("No travellers found!")
             else:
                 list_travellers(travellers)
+                log_activity(session_token, "Listed all travellers")
         elif choice == "2":
-            register_traveller_menu()
+            register_traveller_menu(session_token)
         elif choice == "3":
             travellers = show_all_travellers()
             if travellers == None:
                 print("\nNo travellers found!")
             else:
-                update_travellers_menu(travellers)
+                update_travellers_menu(travellers, session_token)
         elif choice == "4":
             travellers = show_all_travellers()
             if travellers == None:
                 print("\nNo travellers found!")
             else:
-                delete_traveller_menu(travellers)
+                delete_traveller_menu(travellers, session_token)
         elif choice == "5":
             break
         else:
@@ -50,10 +52,11 @@ def show_all_travellers():
     travellers = cursor.execute(
         "SELECT * FROM travellers").fetchall()
 
+
     return travellers if len(travellers) > 0 else None
 
 
-def register_traveller_menu():
+def register_traveller_menu(session_token):
     print("\n--- Register a new traveller ---")
 
     first_name = get_valid_input(
@@ -98,12 +101,12 @@ def register_traveller_menu():
         city,
         email_address,
         mobile_phone,
-        driving_license_number
+        driving_license_number, session_token
     )
 
 
 def register_traveller(first_name, last_name, birthday, gender, street_name, house_number, zip_code, city,
-                       email_address, mobile_phone, driving_license_number):
+                       email_address, mobile_phone, driving_license_number, session_token):
     try:
 
         cursor.execute("""
@@ -124,16 +127,22 @@ def register_traveller(first_name, last_name, birthday, gender, street_name, hou
             deterministic_encrypt(
                 datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
         )
-                       )
+        )
         conn.commit()
         print("Traveller created.")
+        log_activity(
+            session_token, f"Registered new traveller: {first_name} {last_name}")
     except sqlite3.IntegrityError:
         print("Traveller already exists")
-    except:
+        log_activity(session_token, "Failed to register traveller",
+                     "Duplicate entry")
+    except Exception as e:
         print("An unexpected error occurred. Please contact support.")
+        log_activity(session_token, "Failed to register traveller",
+                     "Unexpected error: " + str(e))
 
 
-def update_travellers_menu(travellers):
+def update_travellers_menu(travellers, session_token):
     list_travellers(travellers)
     traveller_id = -1
     while True:
@@ -196,12 +205,12 @@ def update_travellers_menu(travellers):
         city,
         email_address,
         mobile_phone,
-        driving_license_number
+        driving_license_number, session_token
     )
 
 
 def update_traveller(id, first_name, last_name, birthday, gender, street_name, house_number, zip_code, city,
-                     email_address, mobile_phone, driving_license_number):
+                     email_address, mobile_phone, driving_license_number, session_token):
     try:
         cursor.execute("""
             UPDATE travellers
@@ -223,11 +232,14 @@ def update_traveller(id, first_name, last_name, birthday, gender, street_name, h
         ))
         conn.commit()
         print("Traveller updated successfully.")
-    except Exception:
-        print("An error occurred while updating the traveller")
+        log_activity(session_token, f"Updated traveller ID: {id}")
+    except Exception as e:
+        print("An error occurred while updating the traveller:", e)
+        log_activity(
+            session_token, f"Failed to update traveller ID: {id}", str(e))
 
 
-def delete_traveller_menu(travellers):
+def delete_traveller_menu(travellers, session_token):
     list_travellers(travellers)
     traveller_id = -1
     while True:
@@ -246,18 +258,22 @@ def delete_traveller_menu(travellers):
                 break
         except:
             print("Invalid input")
-    delete_traveller(traveller_id)
+    delete_traveller(traveller_id, session_token)
 
 
-def delete_traveller(id):
+def delete_traveller(id, session_token):
     try:
 
         cursor.execute("""DELETE FROM travellers WHERE traveller_id = ?;
         """, str(id))
         print("traveller with id {id} has been succesfully deleted")
+        log_activity(
+            session_token, f"Deleted traveller ID: {id}")
     except Exception as e:
         print(
             f"An error has occured while deleting traveller with id :{id}", e)
+        log_activity(
+            session_token, f"Failed to delete traveller ID: {id}", str(e))
 
 
 def list_travellers(travellers):

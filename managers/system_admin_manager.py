@@ -2,11 +2,13 @@ import sqlite3
 from utils.encryption import encrypt, decrypt, hash_password, deterministic_encrypt, deterministic_decrypt
 from utils.validation import validate_username, validate_password, validate_name
 from datetime import datetime
+from Logging.log_activity import log_activity
+
 
 DB_PATH = "urban_mobility.db"
 
 
-def system_admin_crud():
+def system_admin_crud(session_token):
     while True:
         print("\n--- System Admin Management ---")
         print("1. Create System Admin")
@@ -17,20 +19,21 @@ def system_admin_crud():
         choice = input("Choose an option: ").strip()
 
         if choice == "1":
-            create_system_admin()
+            create_system_admin(session_token)
+
         elif choice == "2":
-            list_system_admins()
+            list_system_admins(session_token)
         elif choice == "3":
-            update_system_admin()
+            update_system_admin(session_token)
         elif choice == "4":
-            delete_system_admin()
+            delete_system_admin(session_token)
         elif choice == "5":
             break
         else:
             print("Invalid option.")
 
 
-def create_system_admin():
+def create_system_admin(session_token):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
@@ -90,13 +93,20 @@ def create_system_admin():
         ))
         conn.commit()
         print("System Admin created.")
+        log_activity(session_token, f"Created System Admin: {username}")
     except sqlite3.IntegrityError:
         print("Username already exists.")
+        log_activity(
+            session_token, f"Failed to create System Admin: {username}", "(username exists)")
+    except Exception as e:
+        print("An error occurred while creating System Admin:")
+        log_activity(
+            session_token, f"Error creating System Admin: {username}", str(e))
     finally:
         conn.close()
 
 
-def list_system_admins():
+def list_system_admins(session_token=None):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
@@ -109,13 +119,13 @@ def list_system_admins():
         user_id, username_enc, fname_enc, lname_enc = row
         print(
             f"[{user_id}] {deterministic_decrypt(username_enc)} | {decrypt(fname_enc)} {decrypt(lname_enc)}")
-
+        if session_token:
+            log_activity(session_token, "Listed System Admins")
     conn.close()
     return rows
 
 
-def update_system_admin():
-    list_system_admins()
+def update_system_admin(session_token):
     user_id = input("Enter System Admin ID to update: ").strip()
 
     while True:
@@ -149,9 +159,10 @@ def update_system_admin():
     conn.commit()
     conn.close()
     print("System Admin updated.")
+    log_activity(session_token, f"Updated System Admin ID: {user_id}")
 
 
-def delete_system_admin():
+def delete_system_admin(session_token):
     list_system_admins()
     user_id = input("Enter System Admin ID to delete: ").strip()
 
@@ -162,22 +173,4 @@ def delete_system_admin():
     conn.commit()
     conn.close()
     print("System Admin deleted.")
-
-
-def get_user(id):
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    cursor.execute(
-        "SELECT * FROM users WHERE user_id=?", (id,))
-    row = cursor.fetchone()
-
-    conn.close()
-    if row:
-        return {
-            "username": deterministic_decrypt(row[1]),
-            "role": row[3],
-        }
-    else:
-        print("User not found.")
-        return None
+    log_activity(session_token, f"Deleted System Admin ID: {user_id}")
