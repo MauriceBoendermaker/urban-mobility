@@ -22,7 +22,7 @@ def log_activity(session_token, Description, additional_info=None, suspicious=Fa
         user_name = user['username'] if user else None
 
     log_entry = LogEntry(
-        number=0,  # auto_incremented later
+        number=0,
         date=Date,
         time=Time,
         username=user_name,
@@ -35,5 +35,4 @@ def log_activity(session_token, Description, additional_info=None, suspicious=Fa
 
 
 def log_Logins():
-    # This function should log user login activities
-    pass  # Implement the logic to log login activities here
+    pass
