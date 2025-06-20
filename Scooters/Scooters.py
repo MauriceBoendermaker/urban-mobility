@@ -35,7 +35,7 @@ def add_scooter():
 
     conn.commit()
     conn.close()
-    print("Scooter added.")
+    print("\nScooter added.")
 
 
 def delete_scooter():
@@ -45,7 +45,7 @@ def delete_scooter():
     cursor.execute("DELETE FROM scooters WHERE serial_number = ?", (serial,))
     conn.commit()
     conn.close()
-    print("Scooter deleted.")
+    print("\nScooter deleted.")
 
 
 def list_all_scooters():
@@ -59,21 +59,21 @@ def list_all_scooters():
         for s in scooters:
             print(s)
     else:
-        print("No scooters found.")
+        print("\nNo scooters found.")
 
 
 def search_scooter():
     serial = input("Enter scooter serial number: ").strip()
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-
     cursor.execute("SELECT * FROM scooters WHERE serial_number = ?", (serial,))
     scooter = cursor.fetchone()
+
     if scooter:
-        print("Scooter found:")
+        print("\nScooter found:")
         print(scooter)
     else:
-        print("Scooter not found.")
+        print("\nScooter not found.")
     conn.close()
 
 
@@ -89,7 +89,7 @@ def update_scooter_attributes(role):
     cursor.execute("SELECT * FROM scooters WHERE serial_number = ?", (serial,))
     scooter = cursor.fetchone()
     if not scooter:
-        print("Scooter not found.")
+        print("\nScooter not found.")
         conn.close()
         return
 
@@ -98,7 +98,6 @@ def update_scooter_attributes(role):
     print("2. Location (Lat/Lon)")
     print("3. Service status (out_of_service 0/1)")
     print("4. SOC target min/max")
-
     choice = input("What do you want to update? ").strip()
 
     if choice == "1":
@@ -118,10 +117,10 @@ def update_scooter_attributes(role):
         cursor.execute("UPDATE scooters SET soc_target_min=?, soc_target_max=? WHERE serial_number=?",
                        (min_target, max_target, serial))
     else:
-        print("Invalid choice.")
+        print("\nInvalid choice.")
         conn.close()
         return
 
     conn.commit()
     conn.close()
-    print("Scooter updated.")
+    print("\nScooter updated.")
