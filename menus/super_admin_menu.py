@@ -1,6 +1,6 @@
 from managers.system_admin_manager import system_admin_crud
 from travellers.travellers import travellers_crud_menu
-from utils.backup_manager import create_backup, restore_backup, assign_backup_to_system_admin
+from utils.backup_manager import Revoke_Backup, create_backup, restore_backup, assign_backup_to_system_admin, RevokeBackup
 
 
 def super_admin_menu(session_token):
@@ -37,7 +37,8 @@ def manage_backups(session_token):
         print("1. Create Backup")
         print("2. Restore Backup")
         print("3. Assign Backup to System Admin")
-        print("4. Back to Super Admin Menu")
+        print("4. Revoke Backup")
+        print("5. Back to Super Admin Menu")
         choice = input("Choose an option: ").strip()
         if choice == "1":
             create_backup(session_token)
@@ -48,6 +49,9 @@ def manage_backups(session_token):
         elif choice == "3":
             assign_backup_to_system_admin(session_token=session_token)
         elif choice == "4":
+            
+            Revoke_Backup()
+        elif choice == "5":
             print("Returning to Super Admin Menu.")
             break
         else:

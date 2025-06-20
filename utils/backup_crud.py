@@ -25,8 +25,8 @@ def add_backup_to_db(backup_file, session_token, SystemAdminID):
     );
 '''
 
-    cursor.execute('''INSERT INTO backups (filename, created_by, datetime, one_use_code, used, allowed_user)
-                      VALUES (?, ?, ?, ?, ?, ?)''', (backup_file, "super_admin", datetime.now().strftime('%Y%m%d'), backup_code, False, SystemAdminID))
+    cursor.execute('''INSERT INTO backups (filename, created_by, datetime, one_use_code, used, allowed_user, revoked)
+                      VALUES (?, ?, ?, ?, ?, ?, ?)''', (backup_file, "super_admin", datetime.now().strftime('%Y%m%d'), backup_code, False, SystemAdminID, False))
 
     conn.commit()
     conn.close()
@@ -43,8 +43,8 @@ def add_backup_as_system_admin(backup_file, session_token, username):
         return
 
     # Insert the backup file entry
-    cursor.execute('''INSERT INTO backups (filename, created_by, datetime, one_use_code, used, allowed_user)
-                      VALUES (?, ?, ?, ?, ?, ?)''', (backup_file, username, datetime.now().strftime('%Y%m%d'), None, False, None))
+    cursor.execute('''INSERT INTO backups (filename, created_by, datetime, one_use_code, used, allowed_user, revoked)
+                      VALUES (?, ?, ?, ?, ?, ?)''', (backup_file, username, datetime.now().strftime('%Y%m%d'), None, False, None, False))
 
     conn.commit()
     conn.close()
@@ -64,6 +64,18 @@ def generate_backup_code_for_system_admin(session_token, backup_file, SystemAdmi
                    (backup_code, backup_file, SystemAdminID))
     print(
         f"Backup code {backup_code} generated for system admin {SystemAdminID} for backup file {backup_file}.")
+
+    conn.commit()
+    conn.close()
+
+
+def RevokeBackup(backup_file):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    cursor.execute('''UPDATE backups
+                      SET revoked = 1
+                      WHERE filename = ?''', (backup_file,))
 
     conn.commit()
     conn.close()

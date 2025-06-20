@@ -1,4 +1,4 @@
-from .backup_crud import add_backup_to_db, add_backup_as_system_admin, generate_backup_code, generate_backup_code_for_system_admin
+from .backup_crud import add_backup_to_db, add_backup_as_system_admin, generate_backup_code_for_system_admin, RevokeBackup
 import os
 import shutil
 import zipfile
@@ -117,3 +117,9 @@ def choose_backup_file():
                 print("Invalid choice. Please try again.")
         except ValueError:
             print("Invalid input. Please enter a number or 'q' to quit.")
+
+
+def Revoke_Backup():
+    backup_file = choose_backup_file()
+    RevokeBackup(backup_file)
+    print(f"Backup {backup_file} has been revoked from the system admin.")
