@@ -6,7 +6,8 @@ from src.activity_logs.log_activity import log_activity
 from src.utils.validation import validate_username, validate_password, validate_name
 from src.utils.encryption import encrypt, decrypt, hash_password, deterministic_encrypt, deterministic_decrypt
 
-DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../..", "urban_mobility.db"))
+
+DB_PATH = os.path.join(os.path.dirname(__file__), "../..", "urban_mobility.db")
 
 
 def system_admin_crud(session_token):
@@ -16,6 +17,7 @@ def system_admin_crud(session_token):
         print("2. View System Admins")
         print("3. Update System Admin")
         print("4. Delete System Admin")
+
         print("5. Back to Main Menu")
         choice = input("Choose an option: ").strip()
 
@@ -27,6 +29,7 @@ def system_admin_crud(session_token):
             update_system_admin(session_token)
         elif choice == "4":
             delete_system_admin(session_token)
+
         elif choice == "5":
             break
         else:
