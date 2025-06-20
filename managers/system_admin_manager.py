@@ -2,7 +2,6 @@ import sqlite3
 from utils.encryption import encrypt, decrypt, hash_password, deterministic_encrypt, deterministic_decrypt
 from utils.validation import validate_username, validate_password, validate_name
 from datetime import datetime
-from travellers.travellers import travellers_crud_menu
 
 DB_PATH = "urban_mobility.db"
 
@@ -14,10 +13,9 @@ def system_admin_crud():
         print("2. View System Admins")
         print("3. Update System Admin")
         print("4. Delete System Admin")
-        print("5. Manage travellers")
-        print("6. Back to Main Menu")
-
+        print("5. Back to Main Menu")
         choice = input("Choose an option: ").strip()
+
         if choice == "1":
             create_system_admin()
         elif choice == "2":
@@ -27,8 +25,6 @@ def system_admin_crud():
         elif choice == "4":
             delete_system_admin()
         elif choice == "5":
-            travellers_crud_menu()
-        elif choice == "6":
             break
         else:
             print("Invalid option.")
@@ -165,23 +161,6 @@ def delete_system_admin():
     conn.commit()
     conn.close()
     print("System Admin deleted.")
-
-
-def list_system_admins():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    cursor.execute(
-        "SELECT user_id, username_encrypted FROM users WHERE role='system_admin'")
-    rows = cursor.fetchall()
-
-    print("\n--- System Admins ---")
-    for row in rows:
-        user_id, username_enc = row
-        print(
-            f"ID: {user_id} {deterministic_decrypt(username_enc)}")
-    conn.close()
-    return rows
 
 
 def get_user(id):

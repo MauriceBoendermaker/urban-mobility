@@ -1,10 +1,10 @@
-from utils.encryption import hash_password, deterministic_encrypt, deterministic_decrypt, verify_password, encrypt, decrypt
+from utils.encryption import hash_password, deterministic_encrypt, deterministic_decrypt, verify_password, encrypt, \
+    decrypt
 import sqlite3
 import os
 from utils.Sessions import create_session, is_session_valid
 from datetime import date
 import getpass
-
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "..", "urban_mobility.db")
 DB_PATH = os.path.abspath(DB_PATH)

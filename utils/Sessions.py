@@ -15,6 +15,7 @@ def create_session(user_id: int):
 def is_session_valid(token):
     session = SESSIONS.get(token)
     if session and session['expires'] > time.time():
+        session['expires'] = time.time() + SESSION_DURATION
         return True
     return False
 

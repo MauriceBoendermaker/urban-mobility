@@ -10,6 +10,7 @@ def service_engineer_menu(role):
         print("2. Change Own Password")
         print("3. Logout")
         choice = input("Choose option: ").strip()
+
         if choice == "1":
             scooter_management_menu(role)
         elif choice == "2":
