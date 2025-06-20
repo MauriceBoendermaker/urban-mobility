@@ -1,30 +1,32 @@
 from auth.login import Login
 from utils.Sessions import is_session_valid
-
 from menus import super_admin_menu, system_admin_menu, service_engineer_menu
 
 
 def main():
-    result = None
-    while result is None:
+    while True:
         result = Login()
-    user, session_token = result
+        if result is None:
+            continue
 
-    while is_session_valid(session_token):
+        user, session_token = result
 
-        if user[3] == "super_admin":
-            super_admin_menu.super_admin_menu()
-            break
+        while is_session_valid(session_token):
+            if user[3] == "super_admin":
+                super_admin_menu.super_admin_menu(session_token)
+                break
 
-        elif user[3] == "system_admin":
-            system_admin_menu.system_admin_menu()
-            break
-        elif user[3] == "service_engineer":
+            elif user[3] == "system_admin":
+                system_admin_menu.system_admin_menu(session_token)
+                break
 
-            service_engineer_menu.service_engineer_menu(user[3])
-            break
-    else:
-        print("Your session is expired")
+            elif user[3] == "service_engineer":
+                service_engineer_menu.service_engineer_menu(user[3])
+                break
+        else:
+            print("Your session is expired")
+
+        print("\nReturning to login screen...\n")
 
 
 if __name__ == "__main__":

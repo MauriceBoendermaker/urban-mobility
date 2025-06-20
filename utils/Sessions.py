@@ -17,3 +17,10 @@ def is_session_valid(token):
     if session and session['expires'] > time.time():
         return True
     return False
+
+
+def get_user_id_from_session(token):
+    session = SESSIONS.get(token)
+    if session and session['expires'] > time.time():
+        return session['user_id']
+    return None

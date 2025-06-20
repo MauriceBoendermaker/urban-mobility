@@ -4,6 +4,8 @@ import os
 from Crypto.Cipher import AES
 from dotenv import load_dotenv
 import base64
+import secrets
+
 
 dotenv_path = os.path.join(os.path.dirname(__file__), "key.env")
 load_dotenv(dotenv_path)
@@ -67,3 +69,8 @@ def hash_password(password: str) -> str:
 
 def verify_password(input_password: str, stored_hash: str) -> bool:
     return hash_password(input_password) == stored_hash
+
+
+def generate_backup_code() -> str:
+    """Generate a one-time backup code."""
+    return secrets.token_hex(8)

@@ -1,8 +1,8 @@
 from managers.service_engineer_manager import service_engineer_crud
-from backup_manager import create_backup
+from utils.backup_manager import create_backup
 
 
-def system_admin_menu():
+def system_admin_menu(session_token):
     while True:
 
         print("\n--- System Admin Menu ---")
@@ -17,6 +17,9 @@ def system_admin_menu():
             print("Logged out.")
             break
         elif choice == "3":
-            create_backup()
+            create_backup(session_token)
+        elif choice == "4":
+            print("Logging out.")
+            break
         else:
             print("Invalid choice.")

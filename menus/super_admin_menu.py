@@ -1,17 +1,16 @@
 from managers.system_admin_manager import system_admin_crud
 from travellers.travellers import travellers_crud_menu
-from backup_manager import create_backup, restore_backup
+from utils.backup_manager import create_backup, restore_backup, assign_backup_to_system_admin
 
 
-def super_admin_menu():
+def super_admin_menu(session_token):
     while True:
         print("\n--- Super Admin Menu ---")
         print("1. Manage System Administrators")
         print("2. View Logs (komt binnenkort)")
         print("3. Manage travellers")
-        print("4. Create Backup")
-        print("5. Restore Backup")
-        print("6. Logout")
+        print("4. Manage Backups")
+        print("5. Logout")
         choice = input("Choose an option: ").strip()
         if choice == "1":
             system_admin_crud()
@@ -24,11 +23,32 @@ def super_admin_menu():
             break
 
         elif choice == "4":
-            create_backup()
-            break
+            manage_backups(session_token)
         elif choice == "5":
-            backup_file = input("Enter the backup file name to restore: ").strip()
+            print("Logging out.")
+            break
+        else:
+            print("Invalid choice.")
+
+
+def manage_backups(session_token):
+    while True:
+        print("\n--- Manage Backups ---")
+        print("1. Create Backup")
+        print("2. Restore Backup")
+        print("3. Assign Backup to System Admin")
+        print("4. Back to Super Admin Menu")
+        choice = input("Choose an option: ").strip()
+        if choice == "1":
+            create_backup(session_token)
+        elif choice == "2":
+            backup_file = input(
+                "Enter the path of the backup file to restore: ").strip()
             restore_backup(backup_file)
+        elif choice == "3":
+            assign_backup_to_system_admin(session_token=session_token)
+        elif choice == "4":
+            print("Returning to Super Admin Menu.")
             break
         else:
             print("Invalid choice.")
