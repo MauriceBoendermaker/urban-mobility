@@ -1,10 +1,11 @@
-from utils.encryption import hash_password, deterministic_encrypt, deterministic_decrypt, verify_password, encrypt, \
-    decrypt
+from utils.encryption import hash_password, deterministic_encrypt, verify_password, encrypt
+from utils.validation import validate_sql_injection_attempt
 import sqlite3
 import os
 from utils.Sessions import create_session, is_session_valid
 from datetime import date
 import getpass
+from Logging.log_activity import log_activity, log_Logins
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "..", "urban_mobility.db")
 DB_PATH = os.path.abspath(DB_PATH)
@@ -39,6 +40,9 @@ def Login():
         print("==== Login ====")
         username = input("Username: ").strip()
         password = getpass.getpass("Password: ").strip()
+        is_sql_injection_pattern = validate_sql_injection_attempt(password)
+        if is_sql_injection_pattern:
+            log_Logins(username, password, description)
 
         if username == super_admin_username and password == super_admin_password:
             print("You're logged in as super admin!")

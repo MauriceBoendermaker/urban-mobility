@@ -1,7 +1,7 @@
 import secrets
 import time
 
-SESSION_DURATION = 60
+SESSION_DURATION = 60000
 SESSIONS = {}
 
 
