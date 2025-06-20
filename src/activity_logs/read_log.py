@@ -4,7 +4,7 @@ import csv
 from .LogEntry import LogEntry
 from src.utils.encryption import deterministic_decrypt
 
-Logs_file = "logs/Logs.csv"
+Logs_file = "log_files/Logs.csv"
 
 
 def read_log():
@@ -30,7 +30,7 @@ def read_log():
             )
             Entries.append(entry)
     if not Headers or not Entries:
-        print("No logs found.")
+        print("No log_files found.")
         return
 
     Headers = decrypt_headers(Headers)
