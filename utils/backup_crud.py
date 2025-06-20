@@ -57,12 +57,13 @@ def generate_backup_code_for_system_admin(session_token, backup_file, SystemAdmi
         print("No valid session found. Cannot assign backup.")
         return
 
+    print(f"backup_file: {backup_file}, SystemAdminID: {SystemAdminID}")
     cursor.execute('''UPDATE backups
-                      SET one_use_code = ?
-                      WHERE filename = ? AND allowed_user = ?''',
-                   (backup_code, backup_file, SystemAdminID))
+                      SET one_use_code = ?, allowed_user = ?
+                      WHERE filename = ?''',
+                   (backup_code, SystemAdminID, backup_file))
     print(
-        f"Backup code {backup_code} generated for system admin {SystemAdminID} for backup file {backup_file}.")
+        f"UPDATE backups SET one_use_code = {backup_code}, allowed_user = {SystemAdminID} WHERE filename = {backup_file}")
 
     conn.commit()
     conn.close()

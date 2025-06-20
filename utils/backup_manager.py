@@ -66,7 +66,7 @@ def assign_backup_to_system_admin(session_token):
             return
 
         generate_backup_code_for_system_admin(
-            backup_file, session_token, SystemAdminID)
+            session_token, backup_file, SystemAdminID)
 
 
 def restore_backup(session_token):
@@ -134,7 +134,7 @@ def choose_backup_file():
         try:
             index = int(choice) - 1
             if 0 <= index < len(backups):
-                print(f"You selected: {backups[index]}")
+
                 return backups[index]
             else:
                 print("Invalid choice. Please try again.")
