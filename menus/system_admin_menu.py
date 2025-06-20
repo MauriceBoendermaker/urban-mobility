@@ -1,9 +1,9 @@
-from Logging.log_activity import log_activity
-from managers.service_engineer_manager import service_engineer_crud
-from utils.backup_manager import create_backup, restore_backup
+from activity_logs import read_log
+from activity_logs import log_activity
 from managers.travellers_manager import travellers_crud_menu
 from managers.scooter_manager import scooter_management_menu
-from Logging.Read_log import read_log
+from utils.backup_manager import create_backup, restore_backup
+from managers.service_engineer_manager import service_engineer_crud
 
 
 def system_admin_menu(session_token):
@@ -32,7 +32,7 @@ def system_admin_menu(session_token):
             read_log()
             log_activity(session_token, "Viewed Logs")
         elif choice == "7":
-            print("Logging out.")
+            print("activity_logs out.")
             break
         else:
             print("Invalid choice.")

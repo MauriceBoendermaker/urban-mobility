@@ -1,18 +1,20 @@
-from .backup_crud import add_backup_to_db, add_backup_as_system_admin, generate_backup_code_for_system_admin, RevokeBackup, is_restore_allowed, is_restore_allowed
 import os
 import shutil
 import zipfile
+
 from datetime import datetime
-from menus.Choose_system_admin import choose_system_admin
 from managers.get_user import get_user
-from .Sessions import get_user_id_from_session, is_session_valid
-from Logging.log_activity import log_activity
+from activity_logs import log_activity
+from menus.choose_system_admin import choose_system_admin
+from .sessions import get_user_id_from_session, is_session_valid
+from .backup_crud import add_backup_to_db, add_backup_as_system_admin, generate_backup_code_for_system_admin, \
+    RevokeBackup, is_restore_allowed
+
 DB_PATH = 'urban_mobility.db'
 BACKUP_FOLDER = '../backups/'
 
 
 def create_backup(session_token):
-
     if not is_session_valid(session_token):
         print("No valid session found. Cannot add backup.")
         return
@@ -70,7 +72,6 @@ def assign_backup_to_system_admin(session_token):
 
 
 def restore_backup(session_token):
-
     if not is_session_valid(session_token):
         print("No valid session found. Cannot restore backup.")
         return

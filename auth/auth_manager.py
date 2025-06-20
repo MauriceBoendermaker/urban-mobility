@@ -1,4 +1,5 @@
 import sqlite3
+
 from utils.encryption import hash_password
 from utils.validation import validate_password
 

@@ -1,9 +1,9 @@
 import sqlite3
-from Logging.log_activity import log_activity
-from utils.encryption import encrypt, decrypt, hash_password, deterministic_encrypt, deterministic_decrypt
-from utils.validation import validate_username, validate_password, validate_name
+
 from datetime import datetime
-from managers.travellers_manager import travellers_crud_menu
+from activity_logs import log_activity
+from utils.validation import validate_username, validate_password, validate_name
+from utils.encryption import hash_password, deterministic_encrypt, deterministic_decrypt
 
 DB_PATH = "urban_mobility.db"
 

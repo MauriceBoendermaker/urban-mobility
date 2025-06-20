@@ -1,6 +1,7 @@
 import sqlite3
-from .Sessions import is_session_valid
+
 from datetime import datetime
+from .sessions import is_session_valid
 from .encryption import generate_backup_code
 
 DB_PATH = "urban_mobility.db"
@@ -26,7 +27,8 @@ def add_backup_to_db(backup_file, session_token, SystemAdminID):
 '''
 
     cursor.execute('''INSERT INTO backups (filename, created_by, datetime, one_use_code, used, allowed_user, revoked)
-                      VALUES (?, ?, ?, ?, ?, ?, ?)''', (backup_file, "super_admin", datetime.now().strftime('%Y%m%d'), backup_code, False, SystemAdminID, False))
+                      VALUES (?, ?, ?, ?, ?, ?, ?)''', (
+    backup_file, "super_admin", datetime.now().strftime('%Y%m%d'), backup_code, False, SystemAdminID, False))
 
     conn.commit()
     conn.close()
@@ -43,7 +45,8 @@ def add_backup_as_system_admin(backup_file, session_token, username):
 
     # Insert the backup file entry
     cursor.execute('''INSERT INTO backups (filename, created_by, datetime, one_use_code, used, allowed_user, revoked)
-                      VALUES (?, ?, ?, ?, ?, ?, ?)''', (backup_file, username, datetime.now().strftime('%Y%m%d'), None, False, None, False))
+                      VALUES (?, ?, ?, ?, ?, ?, ?)''',
+                   (backup_file, username, datetime.now().strftime('%Y%m%d'), None, False, None, False))
 
     conn.commit()
     conn.close()
@@ -88,7 +91,7 @@ def is_restore_allowed(filename, code, user_id):
     cursor.execute('''SELECT * FROM backups
                       WHERE filename = ? ''', (filename,))
     backup = cursor.fetchone()
-    filename, one_use_code,  used, allowed_user, revoked = backup[
+    filename, one_use_code, used, allowed_user, revoked = backup[
         1], backup[4], backup[5], backup[6], backup[7]
     if backup is None:
         print("Invalid backup file or code.")

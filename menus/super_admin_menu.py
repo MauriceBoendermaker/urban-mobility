@@ -1,8 +1,8 @@
+from activity_logs import read_log
+from activity_logs import log_activity
 from managers.system_admin_manager import system_admin_crud
 from managers.travellers_manager import travellers_crud_menu
 from utils.backup_manager import Revoke_Backup, create_backup, restore_backup, assign_backup_to_system_admin
-from Logging.Read_log import read_log
-from Logging.log_activity import log_activity
 
 
 def super_admin_menu(session_token):
@@ -25,7 +25,7 @@ def super_admin_menu(session_token):
         elif choice == "4":
             manage_backups(session_token)
         elif choice == "5":
-            print("Logging out.")
+            print("activity_logs out.")
             break
         else:
             print("Invalid choice.")

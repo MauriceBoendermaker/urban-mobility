@@ -1,5 +1,6 @@
 import re
-from travellers.Cities import CITIES
+
+from travellers.cities import CITIES
 from datetime import datetime
 
 

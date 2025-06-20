@@ -1,5 +1,7 @@
 import sqlite3
+
 from utils.encryption import deterministic_decrypt
+
 DB_PATH = "urban_mobility.db"
 
 

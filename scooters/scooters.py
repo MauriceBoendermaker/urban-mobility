@@ -1,6 +1,7 @@
 import sqlite3
+
 from datetime import datetime
-from Logging.log_activity import log_activity
+from activity_logs import log_activity
 from utils.partial_lookup import partial_lookup
 from utils.validation import get_valid_input, validate_latitude, validate_longitude, validate_soc_percentage, \
     validate_serial_number, validate_positive_int, validate_iso_date
@@ -18,21 +19,21 @@ def add_scooter(session_token):
                              validate_serial_number, "Invalid serial number")
 
     top_speed = int(get_valid_input("Enter top speed (km/h): ",
-                    validate_positive_int, "Invalid top speed"))
+                                    validate_positive_int, "Invalid top speed"))
     battery_capacity = int(
         get_valid_input("Enter battery capacity (Wh): ", validate_positive_int, "Invalid battery capacity"))
     soc = int(get_valid_input("Enter SoC (%): ",
-              validate_soc_percentage, "Invalid SoC"))
+                              validate_soc_percentage, "Invalid SoC"))
     soc_min = int(get_valid_input("Enter SoC target min: ",
-                  validate_soc_percentage, "Invalid min SoC"))
+                                  validate_soc_percentage, "Invalid min SoC"))
     soc_max = int(get_valid_input("Enter SoC target max: ",
-                  validate_soc_percentage, "Invalid max SoC"))
+                                  validate_soc_percentage, "Invalid max SoC"))
     lat = float(get_valid_input("Enter latitude: ",
-                validate_latitude, "Invalid latitude"))
+                                validate_latitude, "Invalid latitude"))
     lon = float(get_valid_input("Enter longitude: ",
-                validate_longitude, "Invalid longitude"))
+                                validate_longitude, "Invalid longitude"))
     mileage = int(get_valid_input("Enter mileage (km): ",
-                  validate_positive_int, "Invalid mileage"))
+                                  validate_positive_int, "Invalid mileage"))
     maintenance_date = get_valid_input(
         "Enter last maintenance date (YYYY-MM-DD): ", validate_iso_date, "Invalid date")
     in_service_date = datetime.now().isoformat()
@@ -149,7 +150,7 @@ def update_scooter_attributes(role, session_token):
         print("\nInvalid choice.")
         conn.close()
         log_activity(
-            session_token, f"Failed to update scooter {serial}",  "Invalid choice")
+            session_token, f"Failed to update scooter {serial}", "Invalid choice")
         return
 
     conn.commit()

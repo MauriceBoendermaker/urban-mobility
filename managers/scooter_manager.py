@@ -1,6 +1,6 @@
-from scooters.scooters import add_scooter, delete_scooter, update_scooter_attributes, search_scooter, list_all_scooters
 from auth.login import get_user
-from utils.Sessions import get_user_id_from_session
+from utils.sessions import get_user_id_from_session
+from scooters.scooters import add_scooter, delete_scooter, update_scooter_attributes, search_scooter, list_all_scooters
 
 
 def scooter_management_menu(session_token):

@@ -1,9 +1,8 @@
 import sqlite3
-from utils.encryption import encrypt, decrypt, hash_password, deterministic_encrypt, deterministic_decrypt
-from datetime import datetime
-from travellers import Cities
+
 from utils.validation import *
-from Logging.log_activity import log_activity
+from activity_logs import log_activity
+from utils.encryption import deterministic_encrypt, deterministic_decrypt
 
 DB_PATH = "urban_mobility.db"
 
@@ -51,7 +50,6 @@ def travellers_crud_menu(session_token):
 def show_all_travellers():
     travellers = cursor.execute(
         "SELECT * FROM travellers").fetchall()
-
 
     return travellers if len(travellers) > 0 else None
 
@@ -127,7 +125,7 @@ def register_traveller(first_name, last_name, birthday, gender, street_name, hou
             deterministic_encrypt(
                 datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
         )
-        )
+                       )
         conn.commit()
         print("Traveller created.")
         log_activity(

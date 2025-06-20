@@ -1,6 +1,5 @@
-from managers.service_engineer_manager import service_engineer_crud
-from managers.scooter_manager import scooter_management_menu
 from auth.auth_manager import update_own_password
+from managers.scooter_manager import scooter_management_menu
 
 
 def service_engineer_menu(role):

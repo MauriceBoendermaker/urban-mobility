@@ -1,6 +1,7 @@
 import sqlite3
-from utils.encryption import decrypt
+
 from typing import List
+from utils.encryption import decrypt
 
 DB_PATH = "urban_mobility.db"
 

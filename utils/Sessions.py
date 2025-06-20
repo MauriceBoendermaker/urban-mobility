@@ -1,5 +1,5 @@
-import secrets
 import time
+import secrets
 
 SESSION_DURATION = 60
 SESSIONS = {}
@@ -25,4 +25,3 @@ def get_user_id_from_session(token):
     if session:
         return session['user_id']
     return None
-
