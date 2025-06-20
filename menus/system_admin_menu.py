@@ -12,7 +12,8 @@ def system_admin_menu(session_token):
         print("3. Manage Scooters")
         print("4. Create Backup")
         print("5. Restore Backup")
-        print("6. Logout")
+        print("6. View Logs (komt binnenkort)")
+        print("7. Logout")
         choice = input("Choose option: ").strip()
 
         if choice == "1":
@@ -26,6 +27,8 @@ def system_admin_menu(session_token):
         elif choice == "5":
             restore_backup(session_token)
         elif choice == "6":
+            print("Viewing logs...")
+        elif choice == "7":
             print("Logging out.")
             break
         else:
