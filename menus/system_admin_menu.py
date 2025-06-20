@@ -10,7 +10,8 @@ def system_admin_menu(session_token):
         print("2. Manage travellers")
         print("3. Create Backup")
         print("4. Restore Backup")
-        print("5. Logout")
+        print("5. View Logs (komt binnenkort)")
+        print("6. Logout")
         choice = input("Choose option: ").strip()
         if choice == "1":
             service_engineer_crud()
@@ -22,6 +23,8 @@ def system_admin_menu(session_token):
         elif choice == "4":
             restore_backup(session_token)
         elif choice == "5":
+            print("Viewing logs...")
+        elif choice == "6":
             print("Logging out.")
             break
         else:

@@ -18,13 +18,18 @@ if key_b64 is None:
 DETERMINISTIC_ENCRYPTION_KEY = base64.b64decode(key_b64)
 
 
-def deterministic_encrypt(plaintext: str) -> str:
+def deterministic_encrypt(plaintext) -> str:
+    if plaintext is None:
+        return ""
+    plaintext = str(plaintext)  # Convert int, float, bool, etc. to string
     cipher = AES.new(DETERMINISTIC_ENCRYPTION_KEY, AES.MODE_SIV)
     ciphertext, tag = cipher.encrypt_and_digest(plaintext.encode())
     return (ciphertext + tag).hex()
 
 
-def deterministic_decrypt(ciphertext_hex: str) -> str:
+def deterministic_decrypt(ciphertext_hex) -> str:
+    if not ciphertext_hex:
+        return ""
     data = bytes.fromhex(ciphertext_hex)
     ciphertext, tag = data[:-16], data[-16:]
     cipher = AES.new(DETERMINISTIC_ENCRYPTION_KEY, AES.MODE_SIV)
