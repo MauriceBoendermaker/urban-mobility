@@ -1,5 +1,5 @@
 import sqlite3
-from encryption import decrypt
+from utils.encryption import decrypt
 from typing import List
 
 DB_PATH = "urban_mobility.db"
@@ -8,7 +8,7 @@ DB_PATH = "urban_mobility.db"
 def partial_lookup(table: str, column: str, partial: str, decrypt_results: bool = False) -> List[tuple]:
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute(f"SELECT * FROM {table} WHERE {column} LIKE ?", ('%' + partial + '%',))
+    cursor.execute(f"SELECT * FROM {table} WHERE LOWER({column}) LIKE LOWER(?)", (f"%{partial}%",))
     results = cursor.fetchall()
     conn.close()
 
