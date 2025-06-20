@@ -1,8 +1,8 @@
 import sqlite3
-from utils.encryption import encrypt, decrypt, hash_password, deterministic_encrypt, deterministic_decrypt
+from utils.encryption import encrypt, decrypt, hash_password, deterministic_encrypt
 from utils.validation import validate_username, validate_password, validate_name
 from datetime import datetime
-from travellers.travellers import travellers_crud_menu
+from managers.travellers_manager import travellers_crud_menu
 
 DB_PATH = "urban_mobility.db"
 
@@ -15,10 +15,9 @@ def service_engineer_crud():
         print("3. Update Service Engineer")
         print("4. Delete Service Engineer")
         print("5. Manage travellers")
-
         print("6. Back to Main Menu")
-
         choice = input("Choose an option: ").strip()
+
         if choice == "1":
             create_service_engineer()
         elif choice == "2":

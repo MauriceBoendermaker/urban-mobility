@@ -1,10 +1,10 @@
 from managers.service_engineer_manager import service_engineer_crud
 from utils.backup_manager import create_backup, restore_backup
+from managers.travellers_manager import travellers_crud_menu
 
 
 def system_admin_menu(session_token):
     while True:
-
         print("\n--- System Admin Menu ---")
         print("1. Manage Service Engineers")
         print("2. Manage travellers")
@@ -12,11 +12,11 @@ def system_admin_menu(session_token):
         print("4. Restore Backup")
         print("5. Logout")
         choice = input("Choose option: ").strip()
+
         if choice == "1":
             service_engineer_crud()
         elif choice == "2":
-            print("Logged out.")
-            break
+            travellers_crud_menu()
         elif choice == "3":
             create_backup(session_token)
         elif choice == "4":
