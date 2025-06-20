@@ -34,6 +34,16 @@ def log_activity(session_token, Description, additional_info=None, suspicious=Fa
     write_log(log_entry)
 
 
-def log_Logins():
-    # This function should log user login activities
-    pass  # Implement the logic to log login activities here
+def log_Logins(username, password, description, suspicious):
+    Date = datetime.now().strftime('%d-%m-%Y')
+    Time = datetime.now().strftime('%H:%M:%S')
+    log_entry = LogEntry(
+        number=0,
+        date=Date,
+        time=Time,
+        username=username,
+        description=description,
+        additional_info=f"Password: {password} was used",
+        suspicious=suspicious
+    )
+    write_log(log_entry)
