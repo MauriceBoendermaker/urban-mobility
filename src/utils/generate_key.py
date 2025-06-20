@@ -1,4 +1,4 @@
 from encryption import generate_key
 
 generate_key()
-print("Key generated, zie: src/logs/logkey.key")
+print("Key generated, zie: src/log_files/logkey.key")

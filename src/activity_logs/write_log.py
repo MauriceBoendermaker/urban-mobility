@@ -5,15 +5,15 @@ from .LogEntry import LogEntry
 from .read_log import decrypt_row
 from src.utils.encryption import deterministic_encrypt
 
-Logs_file = "logs/Logs.csv"
+Logs_file = "log_files/Logs.csv"
 
 
 def write_log(log_entry: LogEntry):
     log_entry.number = get_last_log_entry_number() + 1
-    # Ensure the logs directory exists
+    # Ensure the log_files directory exists
 
-    if not os.path.exists('logs'):
-        os.makedirs('logs')
+    if not os.path.exists('log_files'):
+        os.makedirs('log_files')
 
     headers = ['No', 'Date', 'Time', 'Username', 'User Role',
                'Description', 'Additional Info', 'Suspicious']
