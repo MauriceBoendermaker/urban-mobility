@@ -1,6 +1,7 @@
 import os
 import shutil
 import zipfile
+import tempfile
 
 from datetime import datetime
 from src.managers.get_user import get_user
@@ -27,7 +28,7 @@ def create_backup(session_token):
     zip_path = os.path.join(BACKUP_FOLDER, zip_filename)
 
     with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        zipf.write(DB_PATH, arcname='data.db')
+        zipf.write(DB_PATH, arcname='urban_mobility.db')
 
     # call add_backup_to_db to add the backup entry to the database
     print(f"Backup created: {zip_path}")
@@ -97,11 +98,11 @@ def restore_backup(session_token):
         return
 
     with zipfile.ZipFile(path, 'r') as zipf:
-        zipf.extractall(BACKUP_FOLDER)
+        with tempfile.TemporaryDirectory() as tempdir:
+            zipf.extractall(tempdir)
+            shutil.copy(os.path.join(tempdir, 'urban_mobility.db'), DB_PATH)
 
-    print(f"Backup restored from {path}.")
-    # Optionally, you can also copy the restored DB to the original location
-    shutil.copy(os.path.join(BACKUP_FOLDER, 'data.db'), DB_PATH)
+    print(f"Backup restored from {path} to {DB_PATH}.")
     print("Database restored to original location.")
 
 
