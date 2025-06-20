@@ -163,23 +163,6 @@ def delete_system_admin():
     print("System Admin deleted.")
 
 
-def list_system_admins():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    cursor.execute(
-        "SELECT user_id, username_encrypted FROM users WHERE role='system_admin'")
-    rows = cursor.fetchall()
-
-    print("\n--- System Admins ---")
-    for row in rows:
-        user_id, username_enc = row
-        print(
-            f"ID: {user_id} {deterministic_decrypt(username_enc)}")
-    conn.close()
-    return rows
-
-
 def get_user(id):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
