@@ -76,18 +76,25 @@ def restore_backup(session_token):
     if not is_session_valid(session_token):
         print("No valid session found. Cannot restore backup.")
         return
+
     user_id = get_user_id_from_session(session_token)
     user = get_user(user_id)
 
     if user is None:
         print("No valid user found. Cannot restore backup.")
         return
+
     backup_file = choose_backup_file()
+    if not backup_file:
+        print("No backup file selected.")
+        return
 
     if user['role'] != 'super_admin':
         one_use_code = input("Enter the one-use code for the backup: ").strip()
-        allowed = is_restore_allowed(
-            backup_file, one_use_code, user_id)
+        if not one_use_code:
+            print("You must enter a one-use code.")
+            return
+        allowed = is_restore_allowed(backup_file, one_use_code, user_id)
         if not allowed:
             print("You are not allowed to restore this backup.")
             return

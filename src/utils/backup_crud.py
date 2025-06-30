@@ -66,8 +66,7 @@ def generate_backup_code_for_system_admin(session_token, backup_file, SystemAdmi
                       SET one_use_code = ?, allowed_user = ?
                       WHERE filename = ?''',
                    (backup_code, SystemAdminID, backup_file))
-    print(
-        f"UPDATE backups SET one_use_code = {backup_code}, allowed_user = {SystemAdminID} WHERE filename = {backup_file}")
+    print(f"Backup code '{backup_code}' assigned to system admin ID {SystemAdminID} for file '{backup_file}'.")
 
     conn.commit()
     conn.close()
@@ -89,14 +88,23 @@ def is_restore_allowed(filename, code, user_id):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    cursor.execute('''SELECT * FROM backups
-                      WHERE filename = ? ''', (filename,))
+    cursor.execute('''SELECT * FROM backups WHERE filename = ?''', (filename,))
     backup = cursor.fetchone()
-    filename, one_use_code, used, allowed_user, revoked = backup[
-        1], backup[4], backup[5], backup[6], backup[7]
+
     if backup is None:
         print("Invalid backup file or code.")
+        conn.close()
         return False
 
+    one_use_code = backup[4]
+    used = backup[5]
+    allowed_user = backup[6]
+    revoked = backup[7]
+
     conn.close()
+
+    if allowed_user is None:
+        print("This backup is not assigned to a user.")
+        return False
+
     return used == 0 and int(allowed_user) == user_id and one_use_code == code and not revoked
