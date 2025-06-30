@@ -1,5 +1,6 @@
-import sqlite3
 import os
+import sqlite3
+
 from src.utils.encryption import hash_password
 from src.utils.validation import validate_password
 from src.utils.password_helper import input_password
