@@ -43,7 +43,7 @@ def log_Logins(username, password, description, suspicious):
         time=Time,
         username=username,
         description=description,
-        additional_info=f"Password: {password} was used",
+        additional_info=f"A (valid) password was used to log in.",
         suspicious=suspicious
     )
     write_log(log_entry)
