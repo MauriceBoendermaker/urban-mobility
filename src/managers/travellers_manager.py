@@ -300,8 +300,7 @@ def delete_traveller_menu(travellers, session_token):
 def delete_traveller(id, session_token):
     try:
 
-        cursor.execute("""DELETE FROM travellers WHERE traveller_id = ?;
-        """, str(id))
+        cursor.execute("DELETE FROM travellers WHERE traveller_id = ?", (id,))
         print("traveller with id {id} has been succesfully deleted")
         log_activity(
             session_token, f"Deleted traveller ID: {id}")

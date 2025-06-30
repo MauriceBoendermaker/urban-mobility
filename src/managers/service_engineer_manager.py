@@ -136,8 +136,24 @@ def update_service_engineer(session_token):
     list_service_engineers()
     user_id = input("Enter Service Engineer ID to update: ").strip()
 
-    new_fname = input("New first name: ").strip()
-    new_lname = input("New last name: ").strip()
+    while True:
+        new_fname = input("New first name: ").strip()
+        valid, errors = validate_name(new_fname)
+        if valid:
+            break
+        print("Invalid first name:")
+        for error in errors:
+            print(" -", error)
+
+    while True:
+        new_lname = input("New last name: ").strip()
+        valid, errors = validate_name(new_lname)
+        if valid:
+            break
+        print("Invalid last name:")
+        for error in errors:
+            print(" -", error)
+
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
