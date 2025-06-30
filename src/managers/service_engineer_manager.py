@@ -2,6 +2,7 @@ import os
 import sqlite3
 
 from datetime import datetime
+from src.utils.password_helper import input_password
 from src.activity_logs.log_activity import log_activity
 from src.utils.validation import validate_username, validate_password, validate_name
 from src.utils.encryption import hash_password, deterministic_encrypt, deterministic_decrypt, encrypt, decrypt
@@ -48,7 +49,7 @@ def create_service_engineer(session_token):
             break
 
     while True:
-        password = input("Enter password: ").strip()
+        password = input_password("Enter password: ").strip()
         valid, errors = validate_password(password)
         if not valid:
             print("Password does not meet requirements:")

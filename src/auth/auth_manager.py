@@ -2,6 +2,7 @@ import sqlite3
 import os
 from src.utils.encryption import hash_password
 from src.utils.validation import validate_password
+from src.utils.password_helper import input_password
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "../..", "urban_mobility.db")
 
@@ -9,7 +10,7 @@ DB_PATH = os.path.join(os.path.dirname(__file__), "../..", "urban_mobility.db")
 def update_own_password(user_id):
 
     while True:
-        new_password = input("Enter new password: ").strip()
+        new_password = input_password("Enter password: ").strip()
         valid, errors = validate_password(new_password)
         if not valid:
             print("Password is invalid:")
