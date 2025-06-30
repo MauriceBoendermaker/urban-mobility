@@ -1,9 +1,9 @@
 import os
 import sqlite3
-import getpass
 
 from datetime import date
 from src.utils.sessions import create_session
+from src.utils.password_helper import input_password
 from src.utils.encryption import hash_password, deterministic_encrypt, verify_password, encrypt
 from src.utils.validation import validate_sql_injection_attempt
 
@@ -43,7 +43,7 @@ def Login():
         suspicious_activity = None
         print("==== Login ====")
         username = input("Username: ").strip()
-        password = getpass.getpass("Password: ").strip()
+        password = input_password("Password: ").strip()
 
         login_attempts[username] = login_attempts.get(username, 0)
 
