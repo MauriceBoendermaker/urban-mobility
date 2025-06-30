@@ -20,8 +20,8 @@ def system_admin_menu(session_token):
         print("6. View Logs")
         print("7. Reset password")
         print("8. Delete your account")
-
         print("9. Logout")
+        
         choice = input("Choose option: ").strip()
 
         if choice == "1":
