@@ -18,7 +18,7 @@ def system_admin_menu(session_token):
         print("4. Create Backup")
         print("5. Restore Backup")
         print("6. View Logs")
-        print("7. reset password")
+        print("7. Reset password")
         print("8. Delete your account")
 
         print("9. Logout")
