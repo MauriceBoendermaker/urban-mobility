@@ -1,6 +1,7 @@
 import re
 import os
 import sqlite3
+import builtins
 
 from datetime import datetime
 from src.travellers.cities import CITIES
@@ -245,16 +246,22 @@ def validate_positive_int(value: str) -> tuple[bool, list[str]]:
 
 def get_valid_input(prompt, validator, error_label, toupper=False):
     while True:
-        if toupper:
-            value = input(prompt).strip().upper()
-        else:
+        try:
             value = input(prompt).strip()
-        result = validator(value)
+        except EOFError:
+            print("\nInput terminated. Returning to menu.")
+            return None
 
-        if isinstance(result, bool):
-            valid, errors = result, []
-        else:
-            valid, errors = result
+        if toupper:
+            value = value.upper()
+
+        if contains_binary_or_null(value):
+            print(f"{error_label}:")
+            print(" - Input contains null bytes or control characters.")
+            continue
+
+        result = validator(value)
+        valid, errors = (result, []) if isinstance(result, bool) else result
 
         if valid:
             return value
@@ -282,3 +289,24 @@ def validate_sql_injection_attempt(password):
         if re.search(pattern, password):
             return True
     return False
+
+
+def contains_binary_or_null(value: str) -> bool:
+    return '\x00' in value or any(ord(c) < 32 and c not in ('\n', '\r', '\t') for c in value)
+
+
+
+_original_input = builtins.input
+
+def safe_input(prompt: str = "") -> str | None:
+    try:
+        value = _original_input(prompt)
+    except (EOFError, KeyboardInterrupt):
+        print("\nInput cancelled.")
+        return None
+
+    if '\x00' in value or any(ord(c) < 32 and c not in ('\n', '\r', '\t') for c in value):
+        print("Invalid input: control or null characters detected.")
+        return None
+
+    return value.strip()

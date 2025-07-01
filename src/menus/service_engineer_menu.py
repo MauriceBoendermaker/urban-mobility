@@ -9,7 +9,12 @@ def service_engineer_menu(session_token):
         print("1. Manage Scooters")
         print("2. Change Own Password")
         print("3. Logout")
-        choice = input("Choose option: ").strip()
+
+        choice = input("Choose an option: ")
+        if choice is None:
+            print("Returning to login screen...\n")
+            return
+        choice = choice.strip()
 
         if choice == "1":
             scooter_management_menu(session_token)

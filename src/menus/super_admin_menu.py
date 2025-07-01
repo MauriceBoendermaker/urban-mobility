@@ -17,7 +17,11 @@ def super_admin_menu(session_token):
         print("5. Manage Backups")
         print("6. View Logs")
         print("7. Logout")
-        choice = input("Choose an option: ").strip()
+        choice = input("Choose an option: ")
+        if choice is None:
+            print("Returning to login screen...\n")
+            return
+        choice = choice.strip()
 
         if choice == "1":
             system_admin_crud(session_token)

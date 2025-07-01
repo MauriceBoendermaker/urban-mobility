@@ -20,7 +20,12 @@ def travellers_crud_menu(session_token):
         print("4. Delete traveller")
         print("5. Search traveller")
         print("6. Go back to the previous menu")
-        choice = input("Choose an option: ").strip()
+
+        choice = input("Choose an option: ")
+        if choice is None:
+            print("Returning to login screen...\n")
+            return
+        choice = choice.strip()
 
         if choice == "1":
             travellers = show_all_travellers()
@@ -280,7 +285,7 @@ def delete_traveller_menu(travellers, session_token):
     traveller_id = -1
     while True:
         input_id = input(
-            "Enter the ID of the traveller you want to update: ").strip()
+            "Enter the ID of the traveller you want to delete: ").strip()
         try:
             traveller_id = int(input_id)
             id_exists = False
@@ -301,7 +306,7 @@ def delete_traveller(id, session_token):
     try:
 
         cursor.execute("DELETE FROM travellers WHERE traveller_id = ?", (id,))
-        print("traveller with id {id} has been succesfully deleted")
+        print(f"traveller with id {id} has been succesfully deleted")
         log_activity(
             session_token, f"Deleted traveller ID: {id}")
     except Exception as e:

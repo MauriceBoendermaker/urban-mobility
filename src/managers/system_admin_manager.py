@@ -18,9 +18,13 @@ def system_admin_crud(session_token):
         print("2. View System Admins")
         print("3. Update System Admin")
         print("4. Delete System Admin")
-
         print("5. Back to Main Menu")
-        choice = input("Choose an option: ").strip()
+
+        choice = input("Choose an option: ")
+        if choice is None:
+            print("Returning to login screen...\n")
+            return
+        choice = choice.strip()
 
         if choice == "1":
             create_system_admin(session_token)

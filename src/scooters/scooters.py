@@ -138,7 +138,11 @@ def update_scooter_attributes(role, session_token):
     for opt in editable_options:
         print(f"{opt[0]}. {opt[1]}")
 
-    choice = input("What do you want to update? ").strip()
+    choice = input("What do you want to update?")
+    if choice is None:
+        print("Returning to login screen...\n")
+        return
+    choice = choice.strip()
 
     try:
         if choice == "1":

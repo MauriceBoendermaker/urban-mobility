@@ -23,7 +23,12 @@ def scooter_management_menu(session_token):
             print("4. Delete scooter")
         print("5. List all scooters")
         print("6. Back")
-        choice = input("\nChoose option: ").strip()
+
+        choice = input("Choose an option: ")
+        if choice is None:
+            print("Returning to login screen...\n")
+            return
+        choice = choice.strip()
 
         if choice == "1":
             search_scooter(session_token)

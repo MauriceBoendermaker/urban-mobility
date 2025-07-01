@@ -18,7 +18,12 @@ def service_engineer_crud(session_token):
         print("3. Update Service Engineer")
         print("4. Delete Service Engineer")
         print("5. Back to Main Menu")
-        choice = input("Choose an option: ").strip()
+
+        choice = input("Choose an option: ")
+        if choice is None:
+            print("Returning to login screen...\n")
+            return
+        choice = choice.strip()
 
         if choice == "1":
             create_service_engineer(session_token)

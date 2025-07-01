@@ -21,7 +21,11 @@ def system_admin_menu(session_token):
         print("8. Delete your account")
         print("9. Logout")
 
-        choice = input("Choose option: ").strip()
+        choice = input("Choose an option: ")
+        if choice is None:
+            print("Returning to login screen...\n")
+            return
+        choice = choice.strip()
 
         if choice == "1":
             service_engineer_crud(session_token)
