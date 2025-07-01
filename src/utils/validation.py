@@ -265,16 +265,20 @@ def get_valid_input(prompt, validator, error_label, toupper=False):
 
 
 def validate_sql_injection_attempt(password):
-    sql_injection_regex = re.compile(
-    r"""(?i)
-    (
-        \b(SELECT|UNION|INSERT|UPDATE|DELETE|DROP|ALTER|CREATE|EXEC|SLEEP|GRANT|REVOKE|TRUNCATE|XP_)\b
-        |(['"`])\s*(OR|AND)\s+\3?\d+\3?\s*=\s*\3?\d+
-        |(['"`])\s*=\s*\5
-        |--|#|/\*|\*/|;
-        |CHAR\(\)|CAST\(\)|CONVERT\(\)
-    )
-    """,
-    re.VERBOSE
-)
-    return bool(sql_injection_regex.search(password))
+    sql_injection_keywords = [
+        "SELECT", "UNION", "INSERT", "UPDATE", "DELETE",
+        "DROP", "ALTER", "CREATE", "EXEC", "SLEEP",
+        "GRANT", "REVOKE", "TRUNCATE", "XP_"
+    ]
+
+    injection_patterns = [
+        r"(?i)\b(" + "|".join(sql_injection_keywords) + r")\b",
+        r"(?i)['\"`]\s*(OR|AND)\s+['\"`]?\d+['\"`]?\s*=\s*['\"`]?\d+",  # ' OR 1=1 --
+        r"--", r";", r"/\*", r"\*/",
+        r"(?i)CHAR\([^)]+\)", r"(?i)CAST\(.+? AS .+?\)", r"(?i)CONVERT\("
+    ]
+
+    for pattern in injection_patterns:
+        if re.search(pattern, password):
+            return True
+    return False
