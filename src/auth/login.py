@@ -41,20 +41,28 @@ def get_user(encrypted_username):
 def Login():
     while True:
         suspicious_activity = None
-
         print("==== Login ====")
 
-        username = input("Username: ")
-        if username is None:
-            print("Login cancelled.")
-            return None, None, None
-        username = username.strip()
+        try:
+            username = input("Username: ")
+            if username is None:
+                print("Login cancelled.")
+                return None, None, None
+            username = username.strip()
 
-        password = input_password("Password: ")
-        if password is None:
-            print("Login cancelled.")
+            password = input_password("Password: ")
+            if password is None:
+                print("Login cancelled.")
+                return None, None, None
+            password = password.strip()
+
+        except KeyboardInterrupt:
+            print("\nLogin interrupted by user (Ctrl+C).")
             return None, None, None
-        password = password.strip()
+
+        except (EOFError, KeyboardInterrupt):
+            print("\nLogin cancelled.")
+            return None, None, None
 
         login_attempts[username] = login_attempts.get(username, 0)
 

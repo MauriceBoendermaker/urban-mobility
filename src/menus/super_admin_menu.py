@@ -17,7 +17,9 @@ def super_admin_menu(session_token):
         print("5. Manage Backups")
         print("6. View Logs")
         print("7. Logout")
+
         choice = input("Choose an option: ")
+
         if choice is None:
             print("Returning to login screen...\n")
             return
@@ -51,7 +53,13 @@ def manage_backups(session_token):
         print("3. Assign Backup to System Admin")
         print("4. Revoke Backup")
         print("5. Back to Super Admin Menu")
-        choice = input("Choose an option: ").strip()
+
+        choice = input("Choose an option: ")
+        if choice is None:
+            print("Returning to previous screen...\n")
+            return
+        choice = choice.strip()
+
         if choice == "1":
             create_backup(session_token)
         elif choice == "2":
@@ -59,7 +67,6 @@ def manage_backups(session_token):
         elif choice == "3":
             assign_backup_to_system_admin(session_token=session_token)
         elif choice == "4":
-
             Revoke_Backup()
         elif choice == "5":
             print("Returning to Super Admin Menu.")
